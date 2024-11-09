@@ -12,3 +12,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ROLES {
+  ADMIN
+  USER
+}
+
+model Users {
+  sys_id        String  @id @default(cuid())
+  username      String  @unique
+  avatar        String?
+  email         String  @unique
+  firstName     String
+  lastName      String?
+  password      String
+  isPasswordSet Boolean @default(false)
+
+  roles      ROLES[] @default([USER])
+  blocked    Boolean @default(false)
+  isVerified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  verification_tokens   VerificationTokens[]  @relation("verificationToken")
+  password_reset_tokens PasswordResetTokens[] @relation("resetPasswordToken")
+}
+
+model VerificationTokens {
+  userId    String   @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+  user      Users    @relation("verificationToken", fields: [userId], references: [sys_id])
+}
+
+model PasswordResetTokens {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user Users @relation("resetPasswordToken", fields: [userId], references: [sys_id])
+}
