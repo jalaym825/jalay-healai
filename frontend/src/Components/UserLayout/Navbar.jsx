@@ -5,6 +5,7 @@ import { Button } from "../../UIs/shadcn-ui/button";
 import Global from "../../Utils/Global";
 import { ProfileMenu } from "./ProfileMenu";
 import { Heart } from "lucide-react";
+import logo from '../../assets/logo.svg'
 
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,27 +26,27 @@ export default function NavBar() {
                             </div>
 
                             <div className="flex-1 flex justify-center md:justify-start">
-                                <Link to="/" className="flex items-center space-x-2">
-                                    <Heart className="h-6 w-6" />
-                                    <span className="text-2xl font-montserrat font-bold">HealthCare Plus</span>
+                                <Link to="/" className="flex items-center justify-center space-x-2">
+                                    <img src={logo} alt="logo" className="h-12 w-12" />
+                                    <span className="text-2xl font-montserrat mt-2 font-bold">HealAI</span>
                                 </Link>
                             </div>
 
                             <nav className="hidden md:flex flex-1 justify-center lg:justify-start lg:mr-14">
                                 <div className="flex gap-4 font-dm-sans">
-                                    <Link to='/' className="font-medium p-2.5 flex items-center text-md transition-colors hover:underline">
+                                    <Link to='/' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Home
                                     </Link>
-                                    <Link to='/services' className="font-medium p-2.5 flex items-center text-md transition-colors hover:underline">
+                                    <Link to='/services' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Services
                                     </Link>
-                                    <Link to='/doctors' className="font-medium p-2.5 flex items-center text-md transition-colors hover:underline">
+                                    <Link to='/doctors' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Doctors
                                     </Link>
-                                    <Link to='/about' className="font-medium p-2.5 flex items-center text-md transition-colors hover:underline">
-                                        About
+                                    <Link to='/about' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Support 
                                     </Link>
-                                    <Link to='/contact' className="font-medium p-2.5 flex items-center text-md transition-colors hover:underline">
+                                    <Link to='/contact' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Contact
                                     </Link>
                                 </div>

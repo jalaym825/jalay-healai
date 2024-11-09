@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { useCallback } from "react";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
+import healthsvg from '../../assets/healthsvg.svg'
 
 const Home = () => {
   const particlesInit = useCallback(async (engine) => {
@@ -22,7 +23,7 @@ const Home = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="min-h-screen bg-slate-50">
-        <div className="relative bg-gradient-to-r h-[70vh] font-dm-sans from-teal-500 to-teal-700 text-white py-20">
+        <div className="relative bg-gradient-to-r h-[80vh] font-dm-sans from-teal-500 to-teal-700 text-white py-20">
           <div className="absolute inset-0">
             <Particles
               className="absolute inset-0"
@@ -44,7 +45,7 @@ const Home = () => {
                     distance: 150,
                     enable: true,
                     opacity: 0.2,
-                    width: 1,
+                    width: 1.5,
                   },
                   move: {
                     direction: "none",
@@ -79,8 +80,8 @@ const Home = () => {
           </div>
 
           {/* Hero content */}
-          <div className="relative z-10 max-w-6xl mx-auto px-4">
-            <div className="md:w-2/3">
+          <div className="relative z-10 h-full max-w-6xl flex mx-auto px-4">
+            <div className="md:w-[50%] h-full p-10">
               <h1 className="text-4xl font-montserrat md:text-5xl font-bold mb-6">
                 Your Health, Our Priority
               </h1>
@@ -93,6 +94,9 @@ const Home = () => {
               <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-600">
                 Emergency Care
               </button>
+            </div>
+            <div className='md:w-[50%] h-full flex justify-center items-center'>
+              <img src={healthsvg} alt='healthsvg' className='p-14' />
             </div>
           </div>
         </div>
@@ -165,6 +169,18 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <Link
+        to="/chatbot"
+        className="absolute right-4 bottom-10 z-50 flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full shadow-[0_8px_16px_rgba(20,184,166,0.3)] hover:shadow-[0_12px_24px_rgba(20,184,166,0.4)] hover:transform hover:scale-110 hover:transition-all hover:duration-900 hover:animate-bounce"
+      >
+        <div className="relative flex items-center justify-center">
+          <Stethoscope className="w-8 h-8 text-white" />
+          <div className="absolute inset-0 bg-white opacity-20 blur-sm rounded-full"></div>
+        </div>
+      </Link>
+
+
       <Footer className="mt-auto" />
     </div>
   );
