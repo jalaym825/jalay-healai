@@ -10,6 +10,7 @@ import Global from './Utils/Global';
 import { LottieAnimation } from './Components/Lottie/LottieAnimation';
 import healthLoader from './assets/healthLoader.json'
 import Chatbot from './Components/UserLayout/Chatbot';
+import Meeting from "./Pages/Meeting/index"
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route path="/" element={<LoginSignupLayout />} >
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+            <Route path="meeting" element={<Meeting />} />
           </Route>
         </Routes>
         :

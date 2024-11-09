@@ -148,7 +148,7 @@ const Chatbot = () => {
             <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`} key={index}>
                 <div className={`max-w-[70%] p-3 rounded-lg ${isUser ? 'bg-teal-600 text-white' :
                     isError ? 'bg-red-100 text-red-600' :
-                    'bg-gray-100 text-gray-800'}`}>
+                        'bg-gray-100 text-gray-800'}`}>
                     <strong>{isUser ? 'You' : 'HealAI'}:</strong> {message.content}
                 </div>
             </div>
@@ -250,11 +250,10 @@ const Chatbot = () => {
                             />
                             <button
                                 onClick={toggleListening}
-                                className={`p-3 border rounded-lg transition ${
-                                    isListening 
-                                    ? 'border-red-500 text-red-500 animate-pulse' 
-                                    : 'border-green-500 text-green-500 hover:bg-gray-100'
-                                }`}
+                                className={`p-3 border rounded-lg transition ${isListening
+                                        ? 'border-red-500 text-red-500 animate-pulse'
+                                        : 'border-green-500 text-green-500 hover:bg-gray-100'
+                                    }`}
                                 aria-label="Voice Input"
                                 disabled={isLoading}
                             >
@@ -263,11 +262,10 @@ const Chatbot = () => {
                             <button
                                 onClick={handleSendMessage}
                                 disabled={isLoading || !userInput.trim()}
-                                className={`p-3 rounded-lg transition ${
-                                    isLoading || !userInput.trim()
-                                    ? 'bg-gray-300 cursor-not-allowed'
-                                    : 'bg-teal-500 hover:bg-teal-600 text-white'
-                                }`}
+                                className={`p-3 rounded-lg transition ${isLoading || !userInput.trim()
+                                        ? 'bg-gray-300 cursor-not-allowed'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
+                                    }`}
                                 aria-label="Send Message"
                             >
                                 <FaPaperPlane />
