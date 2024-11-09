@@ -77,7 +77,8 @@ const createAppointment = asyncHandler(async (req, res, next) => {
     })
 
     return res.status(201).json({
-        message: "Appointment Schedule Successfully!"
+        message: "Appointment Schedule Successfully!",
+        meeting_id
     })
 
 })
