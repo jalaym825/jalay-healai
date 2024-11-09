@@ -17,7 +17,7 @@ const server = http.createServer(app);
 app.use(morgan("[:date[clf]] :method :url :status :res[content-length] - :response-time ms"));
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://37.27.81.8:3030'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
