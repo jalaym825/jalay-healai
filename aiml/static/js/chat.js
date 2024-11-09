@@ -70,6 +70,39 @@ function sendMessage() {
     });
 }
 
+// Multilingual Text-to-Speech with Play/Stop Toggle
+let isSpeaking = false;
+let synth = window.speechSynthesis;
+let currentUtterance;
+
+function toggleSpeech(text, lang) {
+    if (isSpeaking) {
+        synth.cancel(); // Stop speaking if already speaking
+        isSpeaking = false;
+    } else {
+        // Set up new SpeechSynthesisUtterance
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = lang; // Set TTS language
+
+        // Add event listener to reset on end
+        currentUtterance.onend = () => {
+            isSpeaking = false;
+        };
+
+        // Start speaking
+        synth.speak(currentUtterance);
+        isSpeaking = true;
+    }
+}
+
+// Function to Detect Language
+function detectLanguage(text) {
+    if (text.match(/[\u0900-\u097F]/)) return 'hi-IN'; // Hindi script
+    if (text.match(/[\u0A80-\u0AFF]/)) return 'gu-IN'; // Gujarati script
+    if (text.match(/[\u0900-\u097F\u0A80-\u0AFF]/)) return 'mr-IN'; // Marathi script
+    return 'en-US'; // Default to English
+}
+
 function displayMessage(text, className, timestamp = null) {
     const chatBox = document.getElementById('chat-box');
     const messageDiv = document.createElement('div');
@@ -84,11 +117,23 @@ function displayMessage(text, className, timestamp = null) {
     // Add timestamp if provided
     if (timestamp) {
         const timestampDiv = document.createElement('div');
-        timestampDiv.className = 'timestamp';
+        timestampDiv.className = 'timestamp';   
         timestampDiv.textContent = timestamp;
         messageDiv.appendChild(timestampDiv);
     }
-    
+
+    // Add "Listen" button if it's a bot message
+    if (className === 'bot-message') {
+        const listenButton = document.createElement('button');
+        listenButton.className = 'listen-button';
+        listenButton.textContent = '🔊 Listen';
+        listenButton.addEventListener('click', () => {
+            const lang = detectLanguage(text);
+            toggleSpeech(text, lang);
+        });
+        messageDiv.appendChild(listenButton);
+    }
+
     chatBox.appendChild(messageDiv);
     
     // Scroll to bottom
@@ -110,7 +155,6 @@ window.addEventListener('load', () => {
     document.getElementById('user-input').focus();
 });
 
-
 // Speech Recognition Setup
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
@@ -124,6 +168,13 @@ if (SpeechRecognition) {
 } else {
     console.error('Speech recognition not supported');
 }
+
+const languageSelect = document.getElementById('language-select');
+languageSelect.addEventListener('change', (event) => {
+    const selectedLanguage = event.target.value;
+    recognition.lang = selectedLanguage;
+    console.log(`Speech recognition language set to: ${selectedLanguage}`);
+});
 
 // Voice Input Button
 const voiceButton = document.getElementById('voice-input-btn');
@@ -193,7 +244,6 @@ if (recognition) {
 
     recognition.onend = () => {
         if (isListening) {
-            // Restart recognition if it was still supposed to be listening
             recognition.start();
         } else {
             hideSpeechTooltip();
