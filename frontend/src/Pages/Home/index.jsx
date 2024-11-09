@@ -100,7 +100,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-
+        
         {/* Rest of the components remain unchanged */}
         {/* Features */}
         <div className="max-w-6xl font-dm-sans mx-auto px-4 py-16">
