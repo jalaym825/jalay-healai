@@ -28,11 +28,11 @@ model Users {
   roles         ROLES   @default(PATIENT)
   isVerified    Boolean @default(false)
 
-  age          Int
-  gender       String
-  height       Float
-  weight       Float
-  mobileNumber String
+  age          Int?
+  gender       String?
+  height       Float?
+  weight       Float?
+  mobileNumber String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
