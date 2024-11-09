@@ -28,8 +28,8 @@ export default function App() {
         (async () => {
             const user = {
                 id: Global.user.email.split('@')[0],
-                name: 'Oliver',
-                image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
+                name: Global.user.firstName,
+                image: `https://getstream.io/random_svg/?id=io4j3tiowebnortnfweo&name=${Global.user.name}`,
             };
 
             const { token } = await Global.httpPost('/appointment/getToken');
