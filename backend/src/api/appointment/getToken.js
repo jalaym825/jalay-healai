@@ -5,7 +5,6 @@ const getToken = asyncHandler(async (req, res, next) => {
 
     const userID = req.user.email.split('@')[0];
 
-
     if (!userID) {
         return next({
             path: '/videocall/getToken', statusCode: 400, message: "UserID is required!"

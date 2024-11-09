@@ -26,6 +26,11 @@ enum APPOINTMENT_STATUS {
   REJECTED
 }
 
+enum MEDICINE_TIME {
+  AFTER
+  BEFORE
+}
+
 model Users {
   email         String  @id @unique
   firstName     String
@@ -34,12 +39,12 @@ model Users {
   isPasswordSet Boolean @default(false)
   role          ROLES   @default(PATIENT)
   isVerified    Boolean @default(false)
-  
-  age           Int?
-  gender        String?
-  height        Float?
-  weight        Float?
-  mobileNumber  String?
+
+  age          Int?
+  gender       String?
+  height       Float?
+  weight       Float?
+  mobileNumber String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,37 +106,37 @@ model VirtualCampAttendees {
 }
 
 model Prescription {
-  id         String    @id @default(uuid())
-  doctor_id  String
-  doctor     Users  @relation("prescription_doctor", fields: [doctor_id], references: [email])
-  patient_id String
-  patient    Users  @relation("prescription_patient", fields: [patient_id], references: [email])
+  id                    String                  @id @default(uuid())
+  doctor_id             String
+  doctor                Users                   @relation("prescription_doctor", fields: [doctor_id], references: [email])
+  patient_id            String
+  patient               Users                   @relation("prescription_patient", fields: [patient_id], references: [email])
+  Prescription_Medicine Prescription_Medicine[] @relation("prescription")
 }
 
-model Prescription_Medicine{
-  prescription_id String 
-  prescription Prescription @relation("prescription", fields: [prescription_id], references: [id])
-  medicine_id String
-  time DateTime
-  quantity Int
-  // eating 
+model Prescription_Medicine {
+  id              Int           @id() @default(autoincrement())
+  prescription_id String
+  prescription    Prescription  @relation("prescription", fields: [prescription_id], references: [id])
+  medicine_id     String
+  time            DateTime
+  quantity        Int
+  eat_time        MEDICINE_TIME
 }
 
 model Forum {
-  id                  Int @id @default(autoincrement())
+  id                  Int            @id @default(autoincrement())
   original_message_id Int
-
-  original_message ForumMessage   @relation("original_message", fields: [original_message_id], references: [id])
-  forum_messages   ForumMessage[] @relation("forum_message")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  original_message    ForumMessage   @relation("original_message", fields: [original_message_id], references: [id])
+  forum_messages      ForumMessage[] @relation("forum_message")
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
 }
 
 model ForumMessage {
   id       Int    @id @default(autoincrement())
   forum_id Int?
-  forum    Forum?  @relation("forum_message", fields: [forum_id], references: [id])
+  forum    Forum? @relation("forum_message", fields: [forum_id], references: [id])
   message  String
   user_id  String
   user     Users  @relation("forum_message_user", fields: [user_id], references: [email])
