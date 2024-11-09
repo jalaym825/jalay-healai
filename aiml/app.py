@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_session import Session
+from flask_cors import CORS  # Import CORS
 from datetime import datetime
 from dotenv import load_dotenv
 import os
@@ -10,6 +11,9 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Configure Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'
