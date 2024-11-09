@@ -5,6 +5,18 @@ const jwt = require("jsonwebtoken");
 const { Prisma } = require("../../utils/index");
 
 
+function generateSixCharString() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+
+    for (let i = 0; i < 6; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    return result;
+}
+
+
 const createAppointment = asyncHandler(async (req, res, next) => {
     const {
         hosted_by,
@@ -18,6 +30,8 @@ const createAppointment = asyncHandler(async (req, res, next) => {
 
     const date = new Date(time);
     const isValid = date < Date.now();
+
+    const meeting_id = generateSixCharString();
 
     if (!isValid) {
         return next({
@@ -57,7 +71,8 @@ const createAppointment = asyncHandler(async (req, res, next) => {
         data: {
             hosted_by,
             attended_by,
-            time
+            time,
+            appointment_link: meeting_id
         }
     })
 

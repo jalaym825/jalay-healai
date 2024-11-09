@@ -10,6 +10,7 @@ const forumRouter = require('./api/forum/router.js');
 const { errorMiddleware } = require('./middlewares/index');
 const { Prisma } = require('./utils/index');
 const logger = require('./utils/logger.js');
+const prescriptionRouter = require('./api/prescription/createPrescription.js')
 
 const app = express();
 const server = http.createServer(app);
@@ -35,6 +36,7 @@ server.listen(port, () => {
     app.use('/auth', authRouter);
     app.use('/appointment', appointmentRouter);
     app.use('/forums', forumRouter);
+    app.use('/prescription', prescriptionRouter);
     app.use(errorMiddleware);
   })
 });

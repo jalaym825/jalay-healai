@@ -57,6 +57,9 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                         lt: new Date(), // Past appointments
                     },
                 },
+                include: {
+                    Prescription: true
+                }
             });
 
             return res.status(200).json({

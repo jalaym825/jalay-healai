@@ -1,4 +1,4 @@
-const { Rotuer, Router } = require('express');
+const { Router } = require('express');
 const { validateZodSchema } = require('../../middlewares');
 const { AppointmentSchema } = require('./zodSchemas')
 const createAppointment = require('./createAppointment');

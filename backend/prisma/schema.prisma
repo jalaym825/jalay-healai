@@ -31,6 +31,12 @@ enum MEDICINE_TIME {
   BEFORE
 }
 
+enum MEDICINE_EAT_TIME {
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
 model Users {
   email         String  @id @unique
   firstName     String
@@ -88,6 +94,7 @@ model Appointment {
   time             DateTime
   hosted_by_user   Users?             @relation("appointment_hosted_by", fields: [hosted_by], references: [email])
   attended_by_user Users?             @relation("appointment_attended_by", fields: [attended_by], references: [email])
+  Prescription     Prescription[]     @relation("appointment_prescription")
 }
 
 model VirtualCamp {
@@ -113,14 +120,17 @@ model Prescription {
   patient_id            String
   patient               Users                   @relation("prescription_patient", fields: [patient_id], references: [email])
   Prescription_Medicine Prescription_Medicine[] @relation("prescription")
+  appointment_id        String
+  appoinntment          Appointment             @relation("appointment_prescription", fields: [appointment_id], references: [id])
 }
 
 model Prescription_Medicine {
-  id              Int           @id() @default(autoincrement())
+  id              Int               @id() @default(autoincrement())
   prescription_id String
-  prescription    Prescription  @relation("prescription", fields: [prescription_id], references: [id])
-  medicine_id     String
-  time            DateTime
+  prescription    Prescription      @relation("prescription", fields: [prescription_id], references: [id])
+  medicine_id     Int
+  medicine        Medicine          @relation("medicine", fields: [medicine_id], references: [id])
+  time            MEDICINE_EAT_TIME
   quantity        Int
   eat_time        MEDICINE_TIME
 }
@@ -146,4 +156,12 @@ model ForumMessage {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Medicine {
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  price                 Float
+  type                  String
+  Prescription_Medicine Prescription_Medicine[] @relation("medicine")
 }
