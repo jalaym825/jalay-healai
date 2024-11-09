@@ -53,7 +53,7 @@ const register = asyncHandler(async (req, res, next) => {
             const token = crypto.randomBytes(20).toString("hex");
             const verificationToken = await _prisma.verificationTokens.create({
                 data: {
-                    userId: newUser.email,
+                    email: newUser.email,
                     token,
                     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
                 },

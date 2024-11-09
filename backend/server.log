@@ -1,0 +1,28 @@
+09-11-2024 14:23:43 info: [/auth/register] - success - john.doe@example.com
+09-11-2024 14:23:43 debug: [/auth/register] - email: john.doe@example.com
+09-11-2024 14:25:54 info: [/auth/register] - success - john.doe@example.com
+09-11-2024 14:25:54 debug: [/auth/register] - email: john.doe@example.com
+09-11-2024 14:25:57 error: [/forgotpassword/resetpassword] - Error: Missing credentials for "PLAIN"
+    at SMTPConnection._formatError (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:807:19)
+    at SMTPConnection.login (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:452:38)
+    at /Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-transport/index.js:272:32
+    at SMTPConnection.<anonymous> (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:215:17)
+    at Object.onceWrapper (node:events:632:28)
+    at SMTPConnection.emit (node:events:518:28)
+    at SMTPConnection._actionEHLO (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1369:14)
+    at SMTPConnection._processResponse (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:991:20)
+    at SMTPConnection._onData (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:772:14)
+    at SMTPConnection._onSocketData (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+09-11-2024 14:26:32 info: [/auth/register] - success - john.doe@example.com
+09-11-2024 14:26:32 debug: [/auth/register] - email: john.doe@example.com
+09-11-2024 14:26:34 error: [/forgotpassword/resetpassword] - Error: Missing credentials for "PLAIN"
+    at SMTPConnection._formatError (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:807:19)
+    at SMTPConnection.login (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:452:38)
+    at /Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-transport/index.js:272:32
+    at SMTPConnection.<anonymous> (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:215:17)
+    at Object.onceWrapper (node:events:632:28)
+    at SMTPConnection.emit (node:events:518:28)
+    at SMTPConnection._actionEHLO (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1369:14)
+    at SMTPConnection._processResponse (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:991:20)
+    at SMTPConnection._onData (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:772:14)
+    at SMTPConnection._onSocketData (/Users/jalaymovaliya/jalay-healai/backend/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
