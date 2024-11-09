@@ -1,7 +1,7 @@
-import logger from "../utils/logger.js";
-import asyncHandler from 'express-async-handler';
-import jwt from 'jsonwebtoken';
-import { Prisma } from '../utils/index.js'; // Adjust the import according to your project structure
+const logger = require("../utils/logger.js");
+const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
+const { Prisma } = require('../utils/index.js'); // Adjust the import according to your project structure
 
 const verifyJWT = asyncHandler(async (req, res, next) => {
     const token = req.cookies?.token || req.header("Authorization")?.split(" ")[1];
@@ -21,7 +21,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
 
     const user = await Prisma.users.findUnique({
         where: {
-            sys_id: payload.id
+            email: payload.id
         }
     });
 
@@ -31,7 +31,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
         return next({ path: "/middleware/verifyJWT", statusCode: 401, message: "User not found" });
     }
 
-    logger.info(`[/middleware/verifyJWT] - user: ${user.sys_id} authenticated`);
+    logger.info(`[/middleware/verifyJWT] - user: ${user.email} authenticated`);
     req.user = user;
     next();
 });

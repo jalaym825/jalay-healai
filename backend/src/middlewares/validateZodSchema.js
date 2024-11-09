@@ -1,4 +1,4 @@
-import asyncHandler from "express-async-handler";
+const asyncHandler = require("express-async-handler");
 const validateSchema = (schema) => asyncHandler(async (req, res, next) => {
     try {
         const parsedBody = await schema.parseAsync(req.body);
@@ -10,4 +10,4 @@ const validateSchema = (schema) => asyncHandler(async (req, res, next) => {
     }
 })
 
-export default validateSchema;
+module.exports = validateSchema;

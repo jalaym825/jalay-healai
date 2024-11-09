@@ -36,7 +36,6 @@ const register = asyncHandler(async (req, res, next) => {
                     data: {
                         firstName,
                         lastName,
-                        username: email.split("@")[0],
                         email: email.toLowerCase(),
                         password: hashedPassword,
                         isPasswordSet: true

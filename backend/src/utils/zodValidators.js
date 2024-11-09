@@ -1,3 +1,5 @@
+const { z } = require('zod');
+
 const RegisterSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     firstName: z.string().min(1, { message: "First name is required" }),

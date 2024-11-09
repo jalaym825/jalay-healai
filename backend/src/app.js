@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const http = require('http');
 const morgan = require('morgan');
 const authRouter = require('./api/auth/router.js');
+const { errorMiddleware } = require('./middlewares/index');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Worker ${process.pid} is listening on port ${port}`);
   app.use('/auth', authRouter);
+  app.use(errorMiddleware);
 });
 
 app.get("/", (req, res) => {
