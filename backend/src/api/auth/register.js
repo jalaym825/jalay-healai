@@ -1,8 +1,8 @@
-import asyncHandler from "express-async-handler";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import jwt from "jsonwebtoken";
-import {Logger, Prisma, Mailer} from "../../utils/index";
+const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
+const { Logger, Prisma, Mailer } = require("../../utils/index");
 
 
 const register = asyncHandler(async (req, res, next) => {
@@ -79,4 +79,4 @@ const register = asyncHandler(async (req, res, next) => {
     }
 })
 
-export default register;
+module.exports = register;

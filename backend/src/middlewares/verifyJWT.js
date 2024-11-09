@@ -1,7 +1,7 @@
 import logger from "../utils/logger.js";
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
-import prisma from '../prismaClient'; // Adjust the import according to your project structure
+import { Prisma } from '../utils/index.js'; // Adjust the import according to your project structure
 
 const verifyJWT = asyncHandler(async (req, res, next) => {
     const token = req.cookies?.token || req.header("Authorization")?.split(" ")[1];
@@ -19,7 +19,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
         return next({ path: "/middleware/verifyJWT", statusCode: 401, message: "Invalid token" });
     }
 
-    const user = await prisma.users.findUnique({
+    const user = await Prisma.users.findUnique({
         where: {
             sys_id: payload.id
         }
@@ -36,4 +36,4 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     next();
 });
 
-export default verifyJWT;
+module.exports = verifyJWT;

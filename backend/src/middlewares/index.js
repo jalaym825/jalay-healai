@@ -1,4 +1,5 @@
-import verifyJWT from "./verifyJWT";
-import isDoctor from "./isDoctor"
-import validateZodSchema from "./validateZodSchema"
-export { verifyJWT, isDoctor, validateZodSchema };
+const verifyJWT =require("./verifyJWT");
+// import isDoctor from "./isDoctor"
+const validateZodSchema = require("./validateZodSchema")
+
+module.exports = { verifyJWT, validateZodSchema };

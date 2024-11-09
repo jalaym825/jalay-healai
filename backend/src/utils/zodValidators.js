@@ -11,4 +11,4 @@ const RegisterSchema = z.object({
 });
 
 
-export { RegisterSchema };
+module.children = { RegisterSchema };

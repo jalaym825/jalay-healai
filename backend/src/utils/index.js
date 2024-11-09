@@ -1,5 +1,5 @@
-import Logger from "./logger";
-import Mailer from "./mailer";
-import Prisma from "./prismaClient";
+const Logger = require("./logger");
+const Mailer = require("./mailer.js");
+const Prisma = require("./prismaClient");
 
-export {Logger, Prisma, Mailer};
+module.exports = { Logger, Prisma, Mailer };
