@@ -1,5 +1,5 @@
 const { merge } = require('lodash');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/apiError');
 
 const errorMiddleware = (err, req, res, next) => {
     console.error(err);
