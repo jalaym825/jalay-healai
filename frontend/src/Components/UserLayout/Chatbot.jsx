@@ -1,108 +1,279 @@
-import React, { useState, useEffect } from 'react';
-import { MessageCircle, X, Send, Stethoscope, Heart, Brain, Activity } from 'lucide-react';
-import { FaHeart, FaMicrophone, FaPaperPlane } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from 'react';
+import { X, Stethoscope } from 'lucide-react';
+import { FaMicrophone, FaPaperPlane } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import Global from '@/Utils/Global';
 import axios from 'axios';
 
 const Chatbot = () => {
     const [userInput, setUserInput] = useState("");
-    const [session_id, setSession_id] = useState("");
+    const [sessionId, setSessionId] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("en-US");
+    const [audioEnabled, setAudioEnabled] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const messagesEndRef = useRef(null);
+    const recognition = useRef(null);
 
     useEffect(() => {
-        setSession_id(`session_${Date.now()}`);
-        const timer = setTimeout(() => setIsVisible(true), 1000);
-        return () => clearTimeout(timer);
+        // Initialize speech recognition
+        if ('webkitSpeechRecognition' in window) {
+            recognition.current = new webkitSpeechRecognition();
+            recognition.current.continuous = false;
+            recognition.current.interimResults = false;
+
+            recognition.current.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                setUserInput(prev => prev + transcript);
+                setIsListening(false);
+            };
+
+            recognition.current.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                setIsListening(false);
+            };
+
+            recognition.current.onend = () => {
+                setIsListening(false);
+            };
+        }
+
+        setSessionId(`session_${Date.now()}`);
+        setMessages([{
+            type: 'bot',
+            content: "👋 Hello! I'm here to listen and support you. How are you feeling today?"
+        }]);
+
+        return () => {
+            if (recognition.current) {
+                recognition.current.stop();
+            }
+        };
     }, []);
 
-    const handleSendMessage = async() => {
-        const response = await axios.post('http://37.27.81.8:9001/send_message', JSON.stringify( { message: userInput, session_id }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        console.log(response);
-        setUserInput('');
+    useEffect(() => {
+        if (recognition.current) {
+            recognition.current.lang = selectedLanguage;
+        }
+    }, [selectedLanguage]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const toggleListening = () => {
+        if (!recognition.current) {
+            alert("Speech recognition is not supported in your browser.");
+            return;
+        }
+
+        if (isListening) {
+            recognition.current.stop();
+            setIsListening(false);
+        } else {
+            recognition.current.start();
+            setIsListening(true);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    const handleSendMessage = async () => {
+        if (!userInput.trim()) return;
+
+        try {
+            setIsLoading(true);
+            const userMessage = {
+                type: 'user',
+                content: userInput.trim()
+            };
+            setMessages(prev => [...prev, userMessage]);
+            setUserInput('');
+
+            const response = await axios.post('http://37.27.81.8:9001/send_message', {
+                message: userMessage.content,
+                session_id: sessionId,
+                language: selectedLanguage
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const cleanedResponse = cleanMessageContent(response.data.response);
+            setMessages(prev => [...prev, {
+                type: 'bot',
+                content: cleanedResponse
+            }]);
+
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setMessages(prev => [...prev, {
+                type: 'error',
+                content: "Sorry, I couldn't process your message. Please try again."
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const cleanMessageContent = (content) => {
+        return content.replace(/^\s*\*\s*/gm, ' ')
+            .replace(/\s+\*\s+/g, '  ')
+            .replace(/\*\*/g, '');
+    };
+
+    const speakText = (text) => {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = selectedLanguage;
+        speech.rate = 1;
+        speech.pitch = 1;
+        window.speechSynthesis.speak(speech);
+    };
+
+    const Message = ({ message, index }) => {
+        const isUser = message.type === 'user';
+        const isError = message.type === 'error';
+
+        return (
+            <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`} key={index}>
+                <div className={`max-w-[70%] p-3 rounded-lg ${isUser ? 'bg-teal-600 text-white' :
+                    isError ? 'bg-red-100 text-red-600' :
+                        'bg-gray-100 text-gray-800'}`}>
+                    <strong>{isUser ? 'You' : 'HealAI'}:</strong> {message.content}
+                </div>
+            </div>
+        );
+    };
+
+    const toggleAudio = (messageIndex) => {
+        const botMessage = messages[messageIndex];
+        if (audioEnabled) {
+            window.speechSynthesis.cancel();
+        } else {
+            speakText(botMessage.content);
+        }
+        setAudioEnabled(!audioEnabled);
+    };
 
     return (
-        <div className='w-full h-[91vh]'>
-                <div className="h-full font-dm-sans bg-white/90 backdrop-blur-lg  border-teal-100">
-                    <div className="flex justify-center  p-4 items-center h-full bg-gradient-to-r from-gray-100 to-gray-200">
-                        <div className="flex flex-col w-full max-w-4xl bg-white rounded-2xl shadow-md h-full">
-                            <div className="flex items-center rounded-t-xl justify-between p-6 bg-gradient-to-r from-teal-500 to-teal-600">
-                                <div className="flex items-center space-x-3">
-                                    <div
-                                        className="w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                                        <Stethoscope className="w-6 h-6 text-teal-600" />
-                                    </div>
-                                    <div>
-                                        <span
-                                            className="text-white font-bold text-lg">
-                                            Health Assistant
-                                        </span>
-                                        <p
-                                            className="text-teal-100 text-sm">
-                                            A safe space to talk and get support
-                                        </p>
-                                    </div>
+        <div className="w-full h-[91vh]">
+            <div className="h-full font-dm-sans bg-white/90 backdrop-blur-lg border-teal-100">
+                <div className="flex justify-center p-4 items-center h-full bg-gradient-to-r from-gray-100 to-gray-200">
+                    <div className="flex flex-col w-full max-w-4xl bg-white rounded-2xl shadow-md h-full">
+                        {/* Header */}
+                        <div className="flex items-center rounded-t-xl justify-between p-6 bg-gradient-to-r from-teal-500 to-teal-600">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
+                                    <Stethoscope className="w-6 h-6 text-teal-600" />
                                 </div>
-                                <Link to='/'>
-                                    <button
-                                        className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                </Link>
-                            </div>
-
-                            <div
-                                className="flex justify-center items-center my-3">
-                                <label htmlFor="language-select" className="mr-2 font-bold">
-                                    Choose Language:
-                                </label>
-                                <select
-                                    id="language-select"
-                                    className="p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300">
-                                    <option value="en-US">English</option>
-                                    <option value="hi-IN">Hindi</option>
-                                    <option value="mr-IN">Marathi</option>
-                                    <option value="gu-IN">Gujarati</option>
-                                </select>
-                            </div>
-
-                            <div
-                                className="flex-grow overflow-y-auto p-5 space-y-4">
-                                <div
-                                    className="bg-gray-100 p-4 rounded-lg text-center text-gray-600">
-                                    👋 Hello! I'm here to listen and support you. How are you feeling today?
+                                <div>
+                                    <span className="text-white font-bold text-lg">
+                                        Health Assistant
+                                    </span>
+                                    <p className="text-teal-100 text-sm">
+                                        A safe space to talk and get support
+                                    </p>
                                 </div>
                             </div>
-
-                            <div
-                                className="p-5 border-t border-gray-300 flex items-end gap-3">
-                                <textarea
-                                    id="user-input"
-                                    className="flex-grow p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-300"
-                                    placeholder="Type your message here..."
-                                    rows="1"
-                                    value={userInput}
-                                    onChange={(e) => setUserInput(e.target.value)}
-                                />
-                                <button
-                                    className="p-3 border border-green-500 text-green-500 rounded-lg hover:bg-gray-100 transition">
-                                    <FaMicrophone />
+                            <Link to='/'>
+                                <button className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
+                                    <X className="w-5 h-5" />
                                 </button>
+                            </Link>
+                        </div>
+
+                        {/* Language Selector */}
+                        <div className="flex justify-center items-center my-3">
+                            <label htmlFor="language-select" className="mr-2 font-bold">
+                                Choose Language:
+                            </label>
+                            <select
+                                id="language-select"
+                                value={selectedLanguage}
+                                onChange={(e) => setSelectedLanguage(e.target.value)}
+                                className="p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+                            >
+                                <option value="en-US">English</option>
+                                <option value="hi-IN">Hindi</option>
+                                <option value="mr-IN">Marathi</option>
+                                <option value="gu-IN">Gujarati</option>
+                            </select>
+                        </div>
+
+                        {/* Messages Container */}
+                        <div className="flex-grow overflow-y-auto p-5 space-y-4">
+                            {messages.map((message, index) => (
+                                <Message key={index} message={message} index={index} />
+                            ))}
+                            {isLoading && (
+                                <div className="flex justify-start">
+                                    <div className="bg-gray-100 p-3 rounded-lg">
+                                        <span className="animate-pulse">Typing...</span>
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+
+                        {/* Listen Button Below the Messages */}
+                        {messages.length > 0 && messages[messages.length - 1].type !== 'user' && (
+                            <div className="p-5 flex justify-center">
                                 <button
-                                    onClick={handleSendMessage}
-                                    className="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition" >
-                                    <FaPaperPlane />
+                                    onClick={() => toggleAudio(messages.length - 1)}
+                                    className="p-2 text-sm bg-teal-500 hover:bg-teal-600 text-white rounded-md"
+                                >
+                                    {audioEnabled ? "Turn Off Audio" : "Listen"}
                                 </button>
                             </div>
+                        )}
+
+                        <div className="p-5 border-t border-gray-300 flex items-end gap-3">
+                            <textarea
+                                id="user-input"
+                                className="flex-grow p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-300"
+                                placeholder="Type your message here..."
+                                rows="1"
+                                value={userInput}
+                                onChange={(e) => setUserInput(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                disabled={isLoading || isListening}
+                            />
+                            <button
+                                onClick={toggleListening}
+                                className={`p-3 border rounded-lg transition ${isListening
+                                        ? 'border-red-500 text-red-500 animate-pulse'
+                                        : 'border-green-500 text-green-500 hover:bg-gray-100'
+                                    }`}
+                                aria-label="Voice Input"
+                                disabled={isLoading}
+                            >
+                                <FaMicrophone />
+                            </button>
+                            <button
+                                onClick={handleSendMessage}
+                                disabled={isLoading || !userInput.trim()}
+                                className={`p-3 rounded-lg transition ${isLoading || !userInput.trim()
+                                        ? 'bg-gray-300 cursor-not-allowed'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
+                                    }`}
+                                aria-label="Send Message"
+                            >
+                                <FaPaperPlane />
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     );
 };

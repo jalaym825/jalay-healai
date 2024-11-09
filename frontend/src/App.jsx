@@ -14,6 +14,7 @@ import BookAppointment from './Pages/BookAppointment';
 import { Profile } from './Pages/Profile';
 import DiscussionForm from './Pages/DiscussionForum';
 import ForumComment from './Pages/DiscussionForum/Forum';
+import Meeting from "./Pages/Meeting/index"
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/" element={<LoginSignupLayout />} >
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+            <Route path="meeting" element={<Meeting />} />
           </Route>
         </Routes>
         :
