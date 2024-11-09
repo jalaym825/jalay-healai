@@ -1,2 +1,3 @@
 aiml/chat/__pycache__
 aiml/.env
+aiml/flask_session
