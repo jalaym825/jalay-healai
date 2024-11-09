@@ -7,7 +7,7 @@ const getToken = asyncHandler(async (req, res, next) => {
 
     if (!userID) {
         return next({
-            path: '/videocall/getToken', statusCode: 400, message: "UserID is required!"
+            path: '/appointment/getToken', statusCode: 400, message: "UserID is required!"
         })
     }
 

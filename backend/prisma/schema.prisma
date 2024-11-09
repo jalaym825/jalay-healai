@@ -84,6 +84,7 @@ model Appointment {
   hosted_by        String?
   attended_by      String?
   status           APPOINTMENT_STATUS @default(PENDING)
+  appointment_link String
   time             DateTime
   hosted_by_user   Users?             @relation("appointment_hosted_by", fields: [hosted_by], references: [email])
   attended_by_user Users?             @relation("appointment_attended_by", fields: [attended_by], references: [email])
