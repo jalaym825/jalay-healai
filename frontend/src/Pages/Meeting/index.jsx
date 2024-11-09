@@ -14,34 +14,33 @@ import '@stream-io/video-react-sdk/dist/css/styles.css';
 import './Meeting.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Global from '@/Utils/Global';
+import { useParams } from 'react-router-dom';
 
 const apiKey = 'db7pgv2zjwk4';
-const userId = 'Asajj_Ventress';
-const callId = 'GiHaVsyJK5Pz';
 
-const user = {
-    id: userId,
-    name: 'Oliver',
-    image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
-};
 
 export default function App() {
     const [client, setClient] = useState(null);
     const [call, setCall] = useState(null);
-
+    const { meetingId } = useParams();
     useEffect(() => {
         (async () => {
-            const { data } = await axios.post('http://localhost:3001/api/get-token', {
-                userId
-            });
-            console.log(data);
-            const client = new StreamVideoClient({ apiKey, user, token: data.jwtToken });
+            const user = {
+                id: Global.user.email.split('@')[0],
+                name: 'Oliver',
+                image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
+            };
+
+            const { token } = await Global.httpPost('/appointment/getToken');
+            const client = new StreamVideoClient({ apiKey, user, token });
             setClient(client);
-            const call = client.call('default', callId);
+            const call = client.call('default', meetingId);
             call.join({ create: true });
             setCall(call);
         })()
     }, [])
+    
     return (
         client && call &&
         <StreamVideo client={client}>

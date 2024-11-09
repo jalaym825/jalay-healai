@@ -50,11 +50,11 @@ function App() {
             <Route path='bookappointment' element={<BookAppointment />} />
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
+            <Route path="meeting/:meetingId" element={<Meeting />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />} >
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
-            <Route path="meeting" element={<Meeting />} />
           </Route>
         </Routes>
         :
