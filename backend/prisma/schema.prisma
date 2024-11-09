@@ -15,45 +15,51 @@ datasource db {
 
 enum ROLES {
   ADMIN
-  USER
+  PATIENT
+  DOCTOR
 }
 
 model Users {
-  sys_id        String  @id @default(cuid())
-  username      String  @unique
-  avatar        String?
-  email         String  @unique
+  email         String  @id @unique
   firstName     String
   lastName      String?
   password      String
   isPasswordSet Boolean @default(false)
-
-  roles      ROLES[] @default([USER])
-  blocked    Boolean @default(false)
-  isVerified Boolean @default(false)
+  roles         ROLES[] @default([PATIENT])
+  isVerified    Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   verification_tokens   VerificationTokens[]  @relation("verificationToken")
   password_reset_tokens PasswordResetTokens[] @relation("resetPasswordToken")
+  hosted_appointments   Appointment[]         @relation("appointment_hosted_by")
+  attended_appointments Appointment[]         @relation("appointment_attended_by")
 }
 
 model VerificationTokens {
-  userId    String   @unique
+  email     String   @unique
   token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   expiresAt DateTime
-  user      Users    @relation("verificationToken", fields: [userId], references: [sys_id])
+  user      Users    @relation("verificationToken", fields: [email], references: [email])
 }
 
 model PasswordResetTokens {
   id        Int      @id @default(autoincrement())
   token     String   @unique
-  userId    String
+  email     String
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  user Users @relation("resetPasswordToken", fields: [userId], references: [sys_id])
+  user Users @relation("resetPasswordToken", fields: [email], references: [email])
+}
+
+model Appointment {
+  id               String  @id @default(uuid())
+  hosted_by        String?
+  attended_by      String?
+  hosted_by_user   Users?  @relation("appointment_hosted_by", fields: [hosted_by], references: [email])
+  attended_by_user Users?  @relation("appointment_attended_by", fields: [attended_by], references: [email])
 }
