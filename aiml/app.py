@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_session import Session
+from flask_cors import CORS  # Import CORS
 from datetime import datetime
 from dotenv import load_dotenv
 import os
@@ -10,6 +11,9 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Configure Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -40,4 +44,5 @@ def send_message():
     return jsonify({"error": "No message received"}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))  # Default to 5000 if PORT is not set
+    app.run(debug=True, host="0.0.0.0", port=port)
