@@ -4,41 +4,24 @@ const { Prisma } = require("../../utils");
 const createPrescription = expressAsyncHandler(async (req, res, next) => {
 
     const {
-        patient_id,
-        doctor_id,
         prescription_medicine,
         appointment_id
     } = req.body;
 
-    if (!patient_id || !doctor_id || !prescription_medicine || !appointment_id) {
+    if (!prescription_medicine || !appointment_id) {
         return next({
             path: '/prescription/createPrescription', statusCode: 400, message: "Validation failed!"
         })
     }
 
-    const doctor = await Prisma.users.findFirst({
+    const appointment = await Prisma.appointment.findFirst({
         where: {
-            email: doctor_id
+            id: appointment_id
         }
     })
 
-    if (!doctor) {
-        return next({
-            path: '/prescription/createPrescription', statusCode: 404, message: "Doctor not found!"
-        })
-    }
-
-    const patient = await Prisma.users.findFirst({
-        where: {
-            email: patient_id
-        }
-    })
-
-    if (!patient) {
-        return next({
-            path: '/prescription/createPrescription', statusCode: 404, message: "Patient not found!"
-        })
-    }
+    const patient_id = appointment.attended_by;
+    const doctor_id = appointment.hosted_by;
 
     const prescriptionData = await Prisma.prescription.create({
         data: {

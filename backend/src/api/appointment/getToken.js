@@ -1,9 +1,22 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require("jsonwebtoken")
+const { Prisma } = require("../../utils/index");
 
 const getToken = asyncHandler(async (req, res, next) => {
 
-    const {userId} = req.body;
+    const {userId, meetingId} = req.body;
+
+    const appointment = await Prisma.appointment.findFirst({
+        where: {
+            appointment_link: meetingId
+        },
+    })
+
+    if(!appointment){
+        return next({
+            path: '/appointment/getToken', statusCode: 404, message: "Appointment not found!"
+        })
+    }
 
     if (!userId) {
         return next({
@@ -15,7 +28,8 @@ const getToken = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({
         message: "Token fetched successfully!",
-        token: token
+        token: token,
+        appointmentId: appointment.id
     })
 
 
