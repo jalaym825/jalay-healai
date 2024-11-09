@@ -5,11 +5,11 @@ const helmet = require('helmet');
 const http = require('http');
 const morgan = require('morgan');
 const authRouter = require('./api/auth/router.js');
-const appointmentRouter = require('./api/appointment/router.js')
+const appointmentRouter = require('./api/appointment/router.js');
+const forumRouter = require('./api/forum/router.js');
 const { errorMiddleware } = require('./middlewares/index');
-const { Prisma } = require('./utils/index')
-const logger = require('./utils/logger.js')
-
+const { Prisma } = require('./utils/index');
+const logger = require('./utils/logger.js');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,7 +17,7 @@ const server = http.createServer(app);
 app.use(morgan("[:date[clf]] :method :url :status :res[content-length] - :response-time ms"));
 
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
@@ -33,7 +33,8 @@ server.listen(port, () => {
   Prisma.$connect().then(() => {
     console.log('Connected to Database');
     app.use('/auth', authRouter);
-    app.use('/appointment', appointmentRouter)
+    app.use('/appointment', appointmentRouter);
+    app.use('/forums', forumRouter);
     app.use(errorMiddleware);
   })
 });

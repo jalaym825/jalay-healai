@@ -15,7 +15,7 @@ const getAppointment = asyncHandler(async (req, res, next) => {
     }
 
     // Current date and time
-    const currentDateTime = new Date().toISOString();
+    const currentDateTime = new Date();
 
 
     if (status === "upcoming") {
@@ -54,7 +54,7 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                 where: {
                     attended_by: user.email,
                     time: {
-                        lt: currentDateTime, // Past appointments
+                        lt: new Date(), // Past appointments
                     },
                 },
             });
