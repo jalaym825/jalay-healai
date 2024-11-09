@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { useEffect, useState } from 'react';
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
@@ -16,8 +15,6 @@ import { Profile } from './Pages/Profile';
 import DiscussionForm from './Pages/DiscussionForum';
 import ForumComment from './Pages/DiscussionForum/Forum';
 import Meeting from "./Pages/Meeting/index"
-
-=======
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
@@ -32,7 +29,6 @@ import healthLoader from "./assets/healthLoader.json";
 import Chatbot from "./Components/UserLayout/Chatbot";
 import Dashboard from "./Pages/Dashboard";
 import Doctordashboard from './Pages/DoctorDashboard'
->>>>>>> Stashed changes
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -61,17 +57,11 @@ function App() {
             <Route path="/discussion" element={<DiscussionForm />} />
             <Route path="services" element={<h1>Services</h1>} />
             <Route path="contact" element={<h1>Contact</h1>} />
-<<<<<<< Updated upstream
             <Route path='chatbot' element={<Chatbot />} />
             <Route path='bookappointment' element={<BookAppointment />} />
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
             <Route path="meeting/:meetingId" element={<Meeting />} />
-=======
-            <Route path="chatbot" element={<Chatbot />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="doctordashboard" element={<Doctordashboard />} />
->>>>>>> Stashed changes
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />
