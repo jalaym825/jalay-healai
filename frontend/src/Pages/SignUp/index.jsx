@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Global from "../../Utils/Global";
 import { toast } from "sonner";
 import { CgGoogle } from "react-icons/cg";
+import zxcvbn from "zxcvbn";
+
 
 export function Signup() {
     const [isLoading, setIsLoading] = useState(false);
@@ -50,12 +52,13 @@ export function Signup() {
                 email: email.value,
                 password: password.value
             });
+            toast.success('Account created successfully');
             navigate("/login");
         } catch (err) {
             toast.error(err.message);
             console.error(err.message);
         } finally {
-            setIsLoading(false); // Reset loading state after HTTP request completes
+            setIsLoading(false); 
         }
     };
     const handleGoogleButton = async () => {
@@ -92,68 +95,70 @@ export function Signup() {
         const bars = Array(5).fill(0).map((_, index) => (
             <div
                 key={index}
-                className={`h-1 w-1/6 mr-1 last:mr-0 rounded ${index <= passwordStrength ? getPasswordStrengthColor(passwordStrength) : "bg-gray-300"}`}
+                className={`h-1 w-full mr-1 last:mr-0 rounded ${index <= passwordStrength ? getPasswordStrengthColor(passwordStrength) : "bg-gray-300"}`}
             ></div>
         ));
         return <div className="flex mt-2">{bars}</div>;
     };
 
     return (
-        <div className="max-w-md w-full mx-auto rounded-2xl font-dm-sans bg-white dark:bg-black p-8 shadow-lg">
-            <h2 className="font-bold text-teal-700 text-xl dark:text-neutral-200">
+        <div className="max-w-md backdrop-blur-lg w-full mx-auto rounded-2xl font-dm-sans  dark:bg-black p-4 shadow-lg h-[500px] overflow-y-auto">
+            <h2 className="font-bold text-teal-700 text-lg dark:text-neutral-200">
                 Welcome to {import.meta.env.VITE_SITE_NAME}
             </h2>
-            <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+            <p className="text-neutral-600 text-xs mt-1 dark:text-neutral-300">
                 Login to {import.meta.env.VITE_SITE_NAME} if you can because we don&apos;t have a login flow yet
             </p>
 
-            <form className="my-8" onSubmit={handleSubmit}>
-                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-                    <LabelInputContainer>
+            <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
+                <div className="flex w-full flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2">
+                    <LabelInputContainer className='w-[50%]'>
                         <Label htmlFor="firstName" className='text-teal-700'>First name</Label>
                         <Input id="firstName" name="firstName" placeholder="John" type="text" disabled={isLoading} />
-                        {errors.firstName && <p className="text-red-600 font-bold text-sm">{errors.firstName}</p>}
+                        {errors.firstName && <p className="text-red-600 text-xs">{errors.firstName}</p>}
                     </LabelInputContainer>
-                    <LabelInputContainer>
+                    <LabelInputContainer className='w-[50%]'>
                         <Label htmlFor="lastName" className='text-teal-700'>Last name</Label>
                         <Input id="lastName" name="lastName" placeholder="Smith" type="text" disabled={isLoading} />
-                        {errors.lastName && <p className="text-red-600 font-bold text-sm">{errors.lastName}</p>}
+                        {errors.lastName && <p className="text-red-600 text-xs">{errors.lastName}</p>}
                     </LabelInputContainer>
                 </div>
-                <LabelInputContainer className="mb-4">
+                <LabelInputContainer className="mb-2">
                     <Label htmlFor="email" className='text-teal-700'>Email Address</Label>
                     <Input id="email" name="email" placeholder="example@gmail.com" type="email" disabled={isLoading} />
-                    {errors.email && <p className="text-red-600 font-bold text-sm">{errors.email}</p>}
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                    <Label htmlFor="password" className='text-teal-700'>Password</Label>
-                    <Input id="password" name="password" placeholder="••••••••" type="password" disabled={isLoading} onChange={handlePasswordChange} />
-                    {renderStrengthBar()}
-                    {errors.password && <p className="text-red-600 font-bold text-sm">{errors.password}</p>}
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-8">
-                    <Label htmlFor="confirmPassword" className='text-teal-700'>Confirm Password</Label>
-                    <Input id="confirmPassword" name="confirmPassword" placeholder="••••••••" type="password" disabled={isLoading} />
-                    {errors.confirmPassword && <p className="text-red-600 font-bold text-sm">{errors.confirmPassword}</p>}
+                    {errors.email && <p className="text-red-600 text-xs">{errors.email}</p>}
                 </LabelInputContainer>
 
+                <div  className="flex w-full flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2">
+                    <LabelInputContainer className="mb-2 w-[50%]">
+                        <Label htmlFor="password" className='text-teal-700 '>Password</Label>
+                        <Input id="password" name="password" placeholder="••••••••" type="password" disabled={isLoading} onChange={handlePasswordChange} />
+                        {renderStrengthBar()}
+                        {errors.password && <p className="text-red-600 text-xs">{errors.password}</p>}
+                    </LabelInputContainer>
+                    <LabelInputContainer className="mb-4 w-[50%]">
+                        <Label htmlFor="confirmPassword" className='text-teal-700'>Confirm Password</Label>
+                        <Input id="confirmPassword" name="confirmPassword" placeholder="••••••••" type="password" disabled={isLoading} />
+                        {errors.confirmPassword && <p className="text-red-600 text-xs">{errors.confirmPassword}</p>}
+                    </LabelInputContainer>
+                </div>
+
                 <button
-                    className={`bg-gradient-to-br relative group/btn from-teal-500 to-teal-700 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]`}
+                    className={`bg-gradient-to-br relative from-teal-500 to-teal-700 block dark:bg-zinc-800 w-full text-white rounded-md h-9 font-medium shadow`}
                     type="submit"
-                    disabled={isLoading} // Disable button when loading or form is disabled
+                    disabled={isLoading}
                 >
                     {isLoading ? (
-                        <span>Loading...</span> // Show loading text or spinner
+                        <span>Loading...</span>
                     ) : (
                         <>
                             Sign up &rarr;
-                            <BottomGradient />
                         </>
                     )}
                 </button>
 
-                <div className="mt-4 text-center">
-                    <span className="text-l text-neutral-600 dark:text-neutral-300">
+                <div className="mt-2 text-center">
+                    <span className="text-xs text-neutral-600 dark:text-neutral-300">
                         Already have an account?{" "}
                         <Link to="/login" className="text-teal-700 hover:underline">
                             Login
@@ -161,23 +166,23 @@ export function Signup() {
                     </span>
                 </div>
 
-                <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+                <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-4 h-[1px] w-full" />
 
-                <div className="flex flex-col items-center space-y-4">
+                <div className="flex flex-col items-center space-y-2">
                     <button
-                        className="relative group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+                        className="relative flex space-x-2 items-center justify-center px-2 w-full text-black rounded-md h-9 font-medium bg-gray-50 dark:bg-zinc-900"
                         type="button"
                         onClick={handleGoogleButton}
                     >
                         <CgGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-                        <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
                             Continue with Google
                         </span>
-                        <BottomGradient />
                     </button>
                 </div>
             </form>
         </div>
+
     );
 }
 

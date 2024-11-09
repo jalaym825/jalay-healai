@@ -11,6 +11,10 @@ export default class Global {
         },
     });
 
+    static getToken() {
+        return localStorage.getItem('token');
+    }
+
     static async getUser() {
         try {
             const res = await this.httpGet('/auth/me');
@@ -58,6 +62,7 @@ export default class Global {
     static getHeaders(isFormData = false) {
         const headers = {
             'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+            Authorization: `Bearer ${this.getToken()}`,
         };
         return headers;
     }

@@ -43,8 +43,8 @@ export default function NavBar() {
                                     <Link to='/doctors' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Doctors
                                     </Link>
-                                    <Link to='/about' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Support 
+                                    <Link to='/discussion' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Discussion 
                                     </Link>
                                     <Link to='/contact' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Contact

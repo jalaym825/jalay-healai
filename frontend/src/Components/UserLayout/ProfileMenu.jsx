@@ -34,7 +34,7 @@ export function ProfileMenu({ trigger }) {
             <DropdownMenuTrigger asChild>
                 {trigger}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
+            <DropdownMenuContent className="w-40 font-dm-sans">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>

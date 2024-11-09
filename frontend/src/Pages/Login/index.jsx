@@ -5,6 +5,7 @@ import { Label } from "../../UIs/shadcn-ui/label";
 import { cn } from "../../UIs/utils/cn";
 import Global from "../../Utils/Global";
 import { CgGoogle } from "react-icons/cg";
+import { toast } from "sonner";
 
 export function Login() {
   const navigate = useNavigate();
@@ -36,10 +37,15 @@ export function Login() {
         password: password.value
       });
       Global.user = res.user;
-      Global.token = res.token;
+      localStorage.setItem("token", res.token);
+      console.log(res.token);
+      // Global.token = res.token;
+      toast.success("Login successful");
+      console.log(res);
       navigate("/");
     } catch (err) {
       console.error(err);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -55,25 +61,18 @@ export function Login() {
       setIsLoading(false);
     }
   }
-    
+
   return (
-    <div className="max-w-md w-full mx-auto font-dm-sans rounded-2xl bg-white dark:bg-black p-8 shadow-lg">
-      <div className="text-center mb-8">
-        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-teal-500 to-teal-700 rounded-full flex items-center justify-center">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-        </div>
-        <h2 className="font-bold text-2xl text-teal-700 dark:text-teal-400">
-          Welcome Back
-        </h2>
-        <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+    <div className="max-w-md backdrop-blur-lg w-full mx-auto font-dm-sans rounded-2xl  dark:bg-black p-4 shadow-lg h-[500px]">
+      <div className="text-center mb-3">
+        <h2 className="font-bold text-lg text-teal-700 dark:text-teal-400">Welcome Back</h2>
+        <p className="text-neutral-600 text-xs mt-1 dark:text-neutral-300">
           Your journey to mental wellness continues here
         </p>
       </div>
 
-      <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-        <LabelInputContainer className="mb-4">
+      <form className="space-y-3" onSubmit={handleSubmit} noValidate>
+        <LabelInputContainer>
           <Label htmlFor="email" className="text-teal-700 dark:text-teal-400">Email Address</Label>
           <Input
             id="email"
@@ -86,10 +85,10 @@ export function Login() {
               errors.email && "border-red-500"
             )}
           />
-          {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
+          {errors.email && <p className="text-red-600 text-xs">{errors.email}</p>}
         </LabelInputContainer>
 
-        <LabelInputContainer className="mb-4">
+        <LabelInputContainer>
           <Label htmlFor="password" className="text-teal-700 dark:text-teal-400">Password</Label>
           <Input
             id="password"
@@ -102,17 +101,17 @@ export function Login() {
               errors.password && "border-red-500"
             )}
           />
-          {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
+          {errors.password && <p className="text-red-600 text-xs">{errors.password}</p>}
         </LabelInputContainer>
 
         <button
-          className="relative w-full px-4 py-3 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg font-medium shadow-lg hover:from-teal-600 hover:to-teal-800 transition-all duration-300 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          className="w-full p-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg font-medium shadow hover:from-teal-600 hover:to-teal-800 transition duration-200 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
           type="submit"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center justify-center">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1" />
               <span>Connecting...</span>
             </div>
           ) : (
@@ -125,8 +124,8 @@ export function Login() {
           )}
         </button>
 
-        <div className="mt-6 text-center">
-          <span className="text-neutral-600 dark:text-neutral-400">
+        <div className="mt-3 text-center">
+          <span className="text-neutral-600 dark:text-neutral-400 text-sm">
             New to our community?{" "}
             <Link to="/signup" className="text-teal-600 hover:text-teal-700 font-medium">
               Join us today
@@ -134,33 +133,34 @@ export function Login() {
           </span>
         </div>
 
-        <div className="mt-4 text-center">
-          <Link to="/forgot-password" className="text-teal-600 hover:text-teal-700 text-sm">
+        <div className="mt-2 text-center">
+          <Link to="/forgot-password" className="text-teal-600 hover:text-teal-700 text-xs">
             Forgot your password?
           </Link>
         </div>
-
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-neutral-200 dark:border-neutral-700" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-black text-neutral-500">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleGoogleButton}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-zinc-800 text-neutral-700 dark:text-neutral-300 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-zinc-700 transition duration-300 shadow-sm"
-        >
-          <CgGoogle className="w-5 h-5" />
-          <span>Continue with Google</span>
-        </button>
       </form>
+
+      <div className="relative mt-4">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-neutral-200 dark:border-neutral-700" />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="px-2 bg-white dark:bg-black text-neutral-500">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleGoogleButton}
+        className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white dark:bg-zinc-800 text-neutral-700 dark:text-neutral-300 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-zinc-700 transition duration-200 shadow-sm mt-4"
+      >
+        <CgGoogle className="w-4 h-4" />
+        <span className="text-sm">Continue with Google</span>
+      </button>
     </div>
+
   );
 }
 

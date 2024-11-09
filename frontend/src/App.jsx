@@ -10,6 +10,10 @@ import Global from './Utils/Global';
 import { LottieAnimation } from './Components/Lottie/LottieAnimation';
 import healthLoader from './assets/healthLoader.json'
 import Chatbot from './Components/UserLayout/Chatbot';
+import BookAppointment from './Pages/BookAppointment';
+import { Profile } from './Pages/Profile';
+import DiscussionForm from './Pages/DiscussionForum';
+import ForumComment from './Pages/DiscussionForum/Forum';
 
 
 function App() {
@@ -38,10 +42,13 @@ function App() {
         <Routes>
           <Route path="/" element={<UserLayout />}>
             <Route path="" element={<Home />} />
-            <Route path="about" element={<h1>About</h1>} />
+            <Route path="/discussion" element={<DiscussionForm />} />
             <Route path="services" element={<h1>Services</h1>} />
             <Route path="contact" element={<h1>Contact</h1>} />
             <Route path='chatbot' element={<Chatbot />} />
+            <Route path='bookappointment' element={<BookAppointment />} />
+            <Route path='profile' element={<Profile />} />
+            <Route path="forum" element={<ForumComment />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />} >
             <Route path="signup" element={<Signup />} />
