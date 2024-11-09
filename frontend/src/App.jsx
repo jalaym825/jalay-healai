@@ -1,34 +1,20 @@
 import { useEffect, useState } from 'react';
-import './App.css'
 import { Route, Routes } from 'react-router-dom';
-import UserLayout from './Components/UserLayout/UserLayout';
-import Home from './Pages/Home';
-import LoginSignupLayout from './Components/UserLayout/Login&SignupLayout';
-import { Signup } from './Pages/SignUp';
-import { Login } from './Pages/Login';
-import Global from './Utils/Global';
+import './App.css';
+import healthLoader from './assets/healthLoader.json';
 import { LottieAnimation } from './Components/Lottie/LottieAnimation';
-import healthLoader from './assets/healthLoader.json'
 import Chatbot from './Components/UserLayout/Chatbot';
+import LoginSignupLayout from './Components/UserLayout/Login&SignupLayout';
+import UserLayout from './Components/UserLayout/UserLayout';
 import BookAppointment from './Pages/BookAppointment';
-import { Profile } from './Pages/Profile';
 import DiscussionForm from './Pages/DiscussionForum';
 import ForumComment from './Pages/DiscussionForum/Forum';
-import Meeting from "./Pages/Meeting/index"
-import { useEffect, useState } from "react";
-import "./App.css";
-import { Route, Routes } from "react-router-dom";
-import UserLayout from "./Components/UserLayout/UserLayout";
-import Home from "./Pages/Home";
-import LoginSignupLayout from "./Components/UserLayout/Login&SignupLayout";
-import { Signup } from "./Pages/SignUp";
-import { Login } from "./Pages/Login";
-import Global from "./Utils/Global";
-import { LottieAnimation } from "./Components/Lottie/LottieAnimation";
-import healthLoader from "./assets/healthLoader.json";
-import Chatbot from "./Components/UserLayout/Chatbot";
-import Dashboard from "./Pages/Dashboard";
-import Doctordashboard from './Pages/DoctorDashboard'
+import Home from './Pages/Home';
+import { Login } from './Pages/Login';
+import Meeting from "./Pages/Meeting/index";
+import { Profile } from './Pages/Profile';
+import { Signup } from './Pages/SignUp';
+import Global from './Utils/Global';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
