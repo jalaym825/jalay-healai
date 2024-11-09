@@ -101,11 +101,20 @@ model VirtualCampAttendees {
 }
 
 model Prescription {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(uuid())
   doctor_id  String
   doctor     Users  @relation("prescription_doctor", fields: [doctor_id], references: [email])
   patient_id String
   patient    Users  @relation("prescription_patient", fields: [patient_id], references: [email])
+}
+
+model Prescription_Medicine{
+  prescription_id String 
+  prescription Prescription @relation("prescription", fields: [prescription_id], references: [id])
+  medicine_id String
+  time DateTime
+  quantity Int
+  // eating 
 }
 
 model Forum {

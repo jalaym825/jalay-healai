@@ -11,7 +11,7 @@ const getToken = asyncHandler(async (req, res, next) => {
         })
     }
 
-    const token = await jwt.sign({ user_id: userID }, process.env.JWT_SECRET);
+    const token = await jwt.sign({ user_id: userID }, "wk8qegtn7utdfn3y6pzpnc7sw4hzktqar727xfcqrtej3fhwk8xqsykweun54s5a");
 
     return res.status(200).json({
         message: "Token fetched successfully!",
