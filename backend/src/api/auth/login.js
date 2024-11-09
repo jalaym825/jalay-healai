@@ -25,10 +25,10 @@ const login = expressAsyncHandler(async (req, res, next) => {
             logger.debug(`[/auth/login] - email: ${email}`);
             return next({ path: '/auth/login', status: 400, message: "Invalid password" })
         }
-        const token = jwt.sign({ id: user.sys_id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user.email }, process.env.JWT_SECRET, {
             expiresIn: "7d",
         });
-        logger.info(`[/auth/login] - success - ${user.sys_id}`);
+        logger.info(`[/auth/login] - success - ${user.email}`);
         logger.debug(`[/auth/login] - email: ${email}`);
 
         // Remove sensitive data from user object

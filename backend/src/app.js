@@ -27,7 +27,7 @@ const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
   console.log(`Worker ${process.pid} is listening on port ${port}`);
-  prisma.$connect().then(() => {
+  Prisma.$connect().then(() => {
     console.log('Connected to database');
     app.use('/auth', authRouter);
     app.use(errorMiddleware);
