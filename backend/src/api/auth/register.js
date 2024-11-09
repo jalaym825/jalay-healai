@@ -43,14 +43,14 @@ const register = asyncHandler(async (req, res, next) => {
                     },
                 });
 
-                Logger.info(`[/auth/register] - success - ${newUser.sys_id}`);
+                Logger.info(`[/auth/register] - success - ${newUser.email}`);
                 Logger.debug(`[/auth/register] - email: ${email}`);
 
                 // send verification email with link
                 const token = crypto.randomBytes(20).toString("hex");
                 const verificationToken = await _prisma.verificationTokens.create({
                     data: {
-                        userId: newUser.sys_id,
+                        userId: newUser.email,
                         token,
                         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
                     },
