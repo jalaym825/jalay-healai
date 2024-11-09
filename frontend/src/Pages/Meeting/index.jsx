@@ -11,7 +11,7 @@ import {
 } from '@stream-io/video-react-sdk';
 
 import '@stream-io/video-react-sdk/dist/css/styles.css';
-import './Meeting.css';
+import './meeting.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Global from '@/Utils/Global';
@@ -40,7 +40,7 @@ export default function App() {
             setCall(call);
         })()
     }, [])
-    
+
     return (
         client && call &&
         <StreamVideo client={client}>
