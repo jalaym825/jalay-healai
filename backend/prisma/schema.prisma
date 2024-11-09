@@ -32,7 +32,7 @@ model Users {
   lastName      String?
   password      String
   isPasswordSet Boolean @default(false)
-  role         ROLES   @default(PATIENT)
+  role          ROLES   @default(PATIENT)
   isVerified    Boolean @default(false)
   age           Int?
   gender        String?

@@ -3,7 +3,7 @@ const axios = require("axios");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const { prisma } = require("../../utils");
+const { Prisma:prisma } = require("../../utils");
 
 
 const googleCallBack = expressAsyncHandler(async (req, res, next) => {
@@ -35,8 +35,6 @@ const googleCallBack = expressAsyncHandler(async (req, res, next) => {
         // If user doesn't exist, create a new one
         user = await prisma.users.create({
             data: {
-                username: profile.email.toLowerCase().split('@')[0],
-                avatar: profile.picture,
                 firstName: profile.given_name,
                 lastName: profile.family_name,
                 email: profile.email.toLowerCase(),
