@@ -1,10 +1,11 @@
 const { Router } = require('express');
-// import { validateZodSchema } from '../../middlewares/index';
-// import { registerSchema } from '../../utils/zodValidators';
+const { validateZodSchema } = require('../../middlewares/index');
+const { RegisterSchema, LoginSchema } = require('./zodSchemas');
 const register = require('./register');
 
 const router = Router();
 
-router.post('/register', register);
+router.post('/register', validateZodSchema(RegisterSchema), register);
+router.post('/login', validateZodSchema(LoginSchema), register);
 
 module.exports = router;
