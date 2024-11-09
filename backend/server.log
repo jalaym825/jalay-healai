@@ -1,0 +1,55 @@
+09-11-2024 14:25:36 debug: Unhandled Rejection at:  Promise [object Promise] reason: PrismaClientInitializationError: [1;91merror[0m: [1mEnvironment variable not found: DATABASE_URL.[0m
+  [1;94m-->[0m  [4mschema.prisma:13[0m
+[1;94m   | [0m
+[1;94m12 | [0m  provider = "postgresql"
+[1;94m13 | [0m  url      = [1;91menv("DATABASE_URL")[0m
+[1;94m   | [0m
+
+Validation Error Count: 1
+09-11-2024 14:26:38 debug: Unhandled Rejection at:  Promise [object Promise] reason: PrismaClientInitializationError: [1;91merror[0m: [1mEnvironment variable not found: DATABASE_URL.[0m
+  [1;94m-->[0m  [4mschema.prisma:13[0m
+[1;94m   | [0m
+[1;94m12 | [0m  provider = "postgresql"
+[1;94m13 | [0m  url      = [1;91menv("DATABASE_URL")[0m
+[1;94m   | [0m
+
+Validation Error Count: 1
+09-11-2024 15:25:26 debug: Unhandled Rejection at:  Promise [object Promise] reason: PrismaClientInitializationError: Can't reach database server at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`.
+09-11-2024 15:26:40 debug: Unhandled Rejection at:  Promise [object Promise] reason: PrismaClientInitializationError: Can't reach database server at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`.
+09-11-2024 15:26:58 debug: Unhandled Rejection at:  Promise [object Promise] reason: PrismaClientInitializationError: Can't reach database server at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-cool-mountain-a44v7cmq.us-east-1.aws.neon.tech:5432`.
+09-11-2024 16:06:08 warn: [/auth/register] - email already exists
+09-11-2024 16:06:09 debug: [/auth/register] - email: 123@gmail.com
+09-11-2024 16:08:27 info: [/auth/login] - success - 123@gmail.com
+09-11-2024 16:08:27 debug: [/auth/login] - email: 123@gmail.com
+09-11-2024 16:09:22 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:15:18 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:20:40 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:21:28 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:23:43 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:24:24 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:25:07 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:26:47 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:29:01 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:31:42 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:32:36 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:33:33 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:35:10 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:36:19 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:36:27 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:37:26 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:38:09 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:38:42 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:39:14 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:39:42 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:41:02 info: [/auth/login] - success - 123@gmail.com
+09-11-2024 16:41:02 debug: [/auth/login] - email: 123@gmail.com
+09-11-2024 16:41:05 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:41:22 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:42:56 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated
+09-11-2024 16:44:11 info: [/middleware/verifyJWT] - user: 123@gmail.com authenticated

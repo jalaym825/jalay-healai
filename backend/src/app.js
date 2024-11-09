@@ -5,8 +5,11 @@ const helmet = require('helmet');
 const http = require('http');
 const morgan = require('morgan');
 const authRouter = require('./api/auth/router.js');
+const appointmentRouter = require('./api/appointment/router.js')
 const { errorMiddleware } = require('./middlewares/index');
 const { Prisma } = require('./utils/index')
+const logger = require('./utils/logger.js')
+
 
 const app = express();
 const server = http.createServer(app);
@@ -28,8 +31,9 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Worker ${process.pid} is listening on port ${port}`);
   Prisma.$connect().then(() => {
-    console.log('Connected to database');
+    console.log('Connected to Database');
     app.use('/auth', authRouter);
+    app.use('/appointment', appointmentRouter)
     app.use(errorMiddleware);
   })
 });
