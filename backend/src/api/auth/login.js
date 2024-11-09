@@ -41,7 +41,6 @@ const login = expressAsyncHandler(async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Ensure Secure flag is true in production
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-            sameSite: 'strict', // Better security against CSRF attacks
             domain: 'localhost', // Set the domain of the cookie
         });
 
