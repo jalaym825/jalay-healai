@@ -31,10 +31,12 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  verification_tokens   VerificationTokens[]  @relation("verificationToken")
-  password_reset_tokens PasswordResetTokens[] @relation("resetPasswordToken")
-  hosted_appointments   Appointment[]         @relation("appointment_hosted_by")
-  attended_appointments Appointment[]         @relation("appointment_attended_by")
+  verification_tokens   VerificationTokens[]   @relation("verificationToken")
+  password_reset_tokens PasswordResetTokens[]  @relation("resetPasswordToken")
+  hosted_appointments   Appointment[]          @relation("appointment_hosted_by")
+  attended_appointments Appointment[]          @relation("appointment_attended_by")
+  VirtualCamp           VirtualCamp[]          @relation("virtualcamp_hosted_by")
+  VirtualCampAttendees  VirtualCampAttendees[] @relation("virtualcamp_attendee")
 }
 
 model VerificationTokens {
@@ -62,4 +64,20 @@ model Appointment {
   attended_by      String?
   hosted_by_user   Users?  @relation("appointment_hosted_by", fields: [hosted_by], references: [email])
   attended_by_user Users?  @relation("appointment_attended_by", fields: [attended_by], references: [email])
+}
+
+model VirtualCamp {
+  id                   String                 @id @default(uuid())
+  hosted_by            String?
+  hosted_by_user       Users?                 @relation("virtualcamp_hosted_by", fields: [hosted_by], references: [email])
+  VirtualCampAttendees VirtualCampAttendees[] @relation("virtualcamp")
+}
+
+model VirtualCampAttendees {
+  virtual_camp_id String
+  virtual_camp    VirtualCamp @relation("virtualcamp", fields: [virtual_camp_id], references: [id])
+  attendee_id     String
+  attendees       Users       @relation("virtualcamp_attendee", fields: [attendee_id], references: [email])
+
+  @@id([virtual_camp_id, attendee_id])
 }
