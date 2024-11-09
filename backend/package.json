@@ -4,17 +4,26 @@
   "description": "all about backend",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node src/app.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "express-async-handler": "^1.2.0",
     "helmet": "^8.0.0",
     "http": "^0.0.1-security",
-    "morgan": "^1.10.0"
+    "luxon": "^3.5.0",
+    "morgan": "^1.10.0",
+    "winston": "^3.16.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
   }
 }

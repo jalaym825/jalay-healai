@@ -25,8 +25,14 @@ model Users {
   lastName      String?
   password      String
   isPasswordSet Boolean @default(false)
-  roles         ROLES[] @default([PATIENT])
+  roles         ROLES   @default(PATIENT)
   isVerified    Boolean @default(false)
+
+  age          Int
+  gender       String
+  height       Float
+  weight       Float
+  mobileNumber String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
