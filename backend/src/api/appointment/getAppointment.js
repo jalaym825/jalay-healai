@@ -22,7 +22,10 @@ const getAppointment = asyncHandler(async (req, res, next) => {
         if (user.role == "PATIENT") {
             const appointmentData = await Prisma.appointment.findMany({
                 where: {
-                    attended_by: user.email
+                    attended_by: user.email,
+                    time: {
+                        gt: currentDateTime, // Upcoming appointments
+                    }
                 }
             })
 
@@ -35,7 +38,10 @@ const getAppointment = asyncHandler(async (req, res, next) => {
         if (user.role == "DOCTOR") {
             const appointmentData = await Prisma.appointment.findMany({
                 where: {
-                    hosted_by: user.email
+                    hosted_by: user.email,
+                    time: {
+                        gt: currentDateTime, // Upcoming appointments
+                    }
                 }
             })
 
@@ -57,6 +63,9 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                         lt: new Date(), // Past appointments
                     },
                 },
+                include: {
+                    Prescription: true
+                }
             });
 
             return res.status(200).json({
