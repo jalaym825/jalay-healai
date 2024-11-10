@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLES {
+  ADMIN
+  PATIENT
+  DOCTOR
+}
+
+enum APPOINTMENT_STATUS {
+  APPROVED
+  PENDING
+  CANCELLED
+  REJECTED
+}
+
+enum MEDICINE_TIME {
+  AFTER
+  BEFORE
+}
+
+enum MEDICINE_EAT_TIME {
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
+model Users {
+  email         String  @id @unique
+  firstName     String
+  lastName      String?
+  password      String
+  isPasswordSet Boolean @default(false)
+  role          ROLES   @default(PATIENT)
+  isVerified    Boolean @default(false)
+
+  age          Int?
+  gender       String?
+  height       Float?
+  weight       Float?
+  mobileNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  verification_tokens   VerificationTokens[]   @relation("verificationToken")
+  password_reset_tokens PasswordResetTokens[]  @relation("resetPasswordToken")
+  hosted_appointments   Appointment[]          @relation("appointment_hosted_by")
+  attended_appointments Appointment[]          @relation("appointment_attended_by")
+  VirtualCamp           VirtualCamp[]          @relation("virtualcamp_hosted_by")
+  VirtualCampAttendees  VirtualCampAttendees[] @relation("virtualcamp_attendee")
+  PrescriptionDoctor    Prescription[]         @relation("prescription_doctor")
+  PrescriptionPatient   Prescription[]         @relation("prescription_patient")
+  forumMessages         ForumMessage[]         @relation("forum_message_user")
+}
+
+model VerificationTokens {
+  email     String   @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+  user      Users    @relation("verificationToken", fields: [email], references: [email])
+}
+
+model PasswordResetTokens {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user Users @relation("resetPasswordToken", fields: [email], references: [email])
+}
+
+model Appointment {
+  id               String             @id @default(uuid())
+  hosted_by        String?
+  attended_by      String?
+  status           APPOINTMENT_STATUS @default(PENDING)
+  appointment_link String             @unique
+  time             DateTime
+  hosted_by_user   Users?             @relation("appointment_hosted_by", fields: [hosted_by], references: [email])
+  attended_by_user Users?             @relation("appointment_attended_by", fields: [attended_by], references: [email])
+  Prescription     Prescription[]     @relation("appointment_prescription")
+}
+
+model VirtualCamp {
+  id                   String                 @id @default(uuid())
+  hosted_by            String?
+  hosted_by_user       Users?                 @relation("virtualcamp_hosted_by", fields: [hosted_by], references: [email])
+  VirtualCampAttendees VirtualCampAttendees[] @relation("virtualcamp")
+}
+
+model VirtualCampAttendees {
+  virtual_camp_id String
+  virtual_camp    VirtualCamp @relation("virtualcamp", fields: [virtual_camp_id], references: [id])
+  attendee_id     String
+  attendees       Users       @relation("virtualcamp_attendee", fields: [attendee_id], references: [email])
+
+  @@id([virtual_camp_id, attendee_id])
+}
+
+model Prescription {
+  id                    String                  @id @default(uuid())
+  doctor_id             String
+  doctor                Users                   @relation("prescription_doctor", fields: [doctor_id], references: [email])
+  patient_id            String
+  patient               Users                   @relation("prescription_patient", fields: [patient_id], references: [email])
+  Prescription_Medicine Prescription_Medicine[] @relation("prescription")
+  appointment_id        String
+  appoinntment          Appointment             @relation("appointment_prescription", fields: [appointment_id], references: [id])
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+}
+
+model Prescription_Medicine {
+  id              Int               @id() @default(autoincrement())
+  prescription_id String
+  prescription    Prescription      @relation("prescription", fields: [prescription_id], references: [id])
+  medicine_id     Int
+  medicine        Medicine          @relation("medicine", fields: [medicine_id], references: [id])
+  time            MEDICINE_EAT_TIME
+  quantity        Int
+  eat_time        MEDICINE_TIME
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Forum {
+  id                  Int            @id @default(autoincrement())
+  original_message_id Int
+  original_message    ForumMessage   @relation("original_message", fields: [original_message_id], references: [id])
+  forum_messages      ForumMessage[] @relation("forum_message")
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+}
+
+model ForumMessage {
+  id       Int    @id @default(autoincrement())
+  forum_id Int?
+  forum    Forum? @relation("forum_message", fields: [forum_id], references: [id])
+  message  String
+  user_id  String
+  user     Users  @relation("forum_message_user", fields: [user_id], references: [email])
+
+  Forum Forum[] @relation("original_message")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Medicine {
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  price                 Float
+  type                  String
+  Prescription_Medicine Prescription_Medicine[] @relation("medicine")
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><i class="fas fa-heart"></i> Mental Health Support Assistant</h1>
+            <p class="subtitle">A safe space to talk and get support</p>
+        </div>
+
+        <!-- Language Selection Dropdown -->
+        <div class="language-selection">
+            <label for="language-select">Choose Language: </label>
+            <select id="language-select">
+                <option value="en-US">English</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="gu-IN">Gujarati</option>
+            </select>
+        </div>
+
+        <div id="chat-box" class="chat-box">
+            <div class="welcome-message">
+                <p>👋 Hello! I'm here to listen and support you. How are you feeling today?</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <textarea id="user-input" placeholder="Type your message here..." rows="1"></textarea>
+            <button id="voice-input-btn" class="voice-btn">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+
+        <div class="typing-indicator" style="display: none;">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
