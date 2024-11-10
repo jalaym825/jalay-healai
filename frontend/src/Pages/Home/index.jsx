@@ -172,15 +172,13 @@ const Home = () => {
 
       <Link
         to="/chatbot"
-        className="absolute right-4 bottom-10 z-50 flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full shadow-[0_8px_16px_rgba(20,184,166,0.3)] hover:shadow-[0_12px_24px_rgba(20,184,166,0.4)] hover:transform hover:scale-110 hover:transition-all hover:duration-900 hover:animate-bounce"
+        className="fixed right-4 bottom-10 z-50 flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full shadow-[0_8px_16px_rgba(20,184,166,0.3)] hover:shadow-[0_12px_24px_rgba(20,184,166,0.4)] hover:transform hover:scale-110 hover:transition-all hover:duration-900 hover:animate-bounce"
       >
         <div className="relative flex items-center justify-center">
           <Stethoscope className="w-8 h-8 text-white" />
           <div className="absolute inset-0 bg-white opacity-20 blur-sm rounded-full"></div>
         </div>
       </Link>
-
-
       <Footer className="mt-auto" />
     </div>
   );
