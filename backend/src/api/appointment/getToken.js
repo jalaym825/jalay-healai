@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 
 const getToken = asyncHandler(async (req, res, next) => {
 
-    const userID = req.user.email;
+    const userID = req.user.email.split("@")[0];
 
     if (!userID) {
         return next({

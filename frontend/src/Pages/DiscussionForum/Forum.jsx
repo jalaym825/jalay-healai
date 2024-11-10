@@ -54,7 +54,8 @@ const ForumMessage = () => {
                 message: addComment,
                 forum_id: parseInt(id)
             });
-            console.log(response);
+            toast.success('Comment added successfully');
+            setForumData([...forumData, response]);
             setAddComment(false);
             setAddComment('');
             toast.success('Comment added successfully');
@@ -104,7 +105,7 @@ const ForumMessage = () => {
                                             className="bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow"
                                         >
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="font-medium text-teal-700">✨ {comment['user'].firstname}</span>
+                                                <span className="font-medium text-teal-700">✨ {comment['user'].firstName}</span>
 
                                             </div>
                                             <p className="text-gray-700">{comment.message}</p>

@@ -15,12 +15,14 @@ import { Login } from './Pages/Login';
 import Meeting from "./Pages/Meeting/index";
 import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
+import Dashboard from "./Pages/Dashboard";
 import Global from './Utils/Global';
 import Dashboard from './Pages/Dashboard';
 
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const loginRequiredRoutes = ["/profile", "/dashboard"];
   useEffect(() => {
     async function fetchUser() {
       setTimeout(async () => {
@@ -28,6 +30,9 @@ function App() {
           const user = await Global.getUser();
           Global.user = user;
         } finally {
+          if (!Global.user && loginRequiredRoutes.includes(window.location.pathname)) {
+            window.location.href = "/login";
+          }
           setIsLoaded(true);
         }
       }, 1500);
@@ -35,7 +40,6 @@ function App() {
     fetchUser();
   }, []);
 
-  const loginRequiredRoutes = ["/profile"];
 
   return (
     <>
@@ -43,7 +47,7 @@ function App() {
         <Routes>
           <Route path="/" element={<UserLayout />}>
             <Route path="" element={<Home />} />
-            <Route path="/discussion" element={<DiscussionForm />} />
+            <Route path="discussion" element={<DiscussionForm />} />
             <Route path="services" element={<h1>Services</h1>} />
             <Route path="contact" element={<h1>Contact</h1>} />
             <Route path='chatbot' element={<Chatbot />} />
@@ -54,7 +58,7 @@ function App() {
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
-
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />

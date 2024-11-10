@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../UIs/shadcn-ui/card";
 import { Progress } from "../UIs/shadcn-ui/progress";
 import { Avatar, AvatarFallback } from '../UIs/shadcn-ui/avatar'
@@ -9,15 +9,27 @@ import { Button } from '../UIs/shadcn-ui/button'
 import { Textarea } from '../UIs/shadcn-ui/textarea'
 import { Badge } from '../UIs/shadcn-ui/badge'
 import { Activity, Calendar, Clock, Phone, User, Star, Heart, Weight, Ruler } from 'lucide-react'
+import Global from '@/Utils/Global';
 
-const Dashboard = () => {
+export default function Component() {
   const [feedback, setFeedback] = useState('')
   const [rating, setRating] = useState(0)
+  const [appointments, setAppointments] = useState([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
 
-  const appointments = [
-    { id: 1, date: '2023-06-15', doctor: 'Dr. Smith', symptoms: 'Headache, Fever', prescription: 'Paracetamol 500mg' },
-    { id: 2, date: '2023-07-01', doctor: 'Dr. Johnson', symptoms: 'Cough, Sore throat', prescription: 'Amoxicillin 250mg' },
-  ]
+  // const appointments = [
+  //   { id: 1, date: '2023-06-15', doctor: 'Dr. Smith', symptoms: 'Headache, Fever', prescription: 'Paracetamol 500mg' },
+  //   { id: 2, date: '2023-07-01', doctor: 'Dr. Johnson', symptoms: 'Cough, Sore throat', prescription: 'Amoxicillin 250mg' },
+  // ]
+
+  useEffect(() => {
+    (async () => {
+      const appointmentResponse = await Global.httpGet("/appointment/getAppointment?status=past");
+      const upcomingAppointmentResponse = await Global.httpGet("/appointment/getAppointment?status=upcoming");
+      setAppointments(appointmentResponse.data);
+      setUpcomingAppointments(upcomingAppointmentResponse.data);
+    })();
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
@@ -28,11 +40,11 @@ const Dashboard = () => {
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <Avatar className="h-16 w-16 bg-green-100">
-              <AvatarFallback className="text-green-700">JD</AvatarFallback>
+              <AvatarFallback className="text-green-700"><img src="https://png.pngtree.com/png-clipart/20231001/original/pngtree-3d-illustration-avatar-profile-man-png-image_13026634.png" alt="" /></AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="font-semibold text-xl">John Doe</h2>
-              <p className="text-sm text-muted-foreground">Patient ID: #123456</p>
+              <h2 className="font-semibold text-xl">{Global.user.firstName}</h2>
+              {/* <p className="text-sm text-muted-foreground">Patient ID: #123456</p> */}
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -64,13 +76,13 @@ const Dashboard = () => {
                 <p className="text-sm text-muted-foreground">175 cm</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-green-600" />
               <div>
                 <p className="text-sm font-medium">Blood Pressure</p>
                 <p className="text-sm text-muted-foreground">120/80 mmHg</p>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2">
               <Phone className="h-5 w-5 text-green-600" />
               <div>
@@ -94,33 +106,42 @@ const Dashboard = () => {
                 <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
               </TabsList>
               <TabsContent value="previous">
-                {appointments.map((appointment) => (
-                  <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold">{appointment.doctor}</span>
-                      <Badge variant="outline">{new Date(appointment.date).toLocaleDateString()}</Badge>
+                {appointments.length === 0 ? (
+                  <p>No Past Appointments!</p>
+                ) : (
+                  appointments.map((appointment) => (
+                    <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
+                      <div className="flex justify-start items-center mb-2">
+                        <span className="font-semibold">{appointment.doctor}</span>
+                        <Badge variant="outline">
+                          {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
+                        </Badge>
+                      </div>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
+                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
                     </div>
-                    <p><strong>Symptoms:</strong> {appointment.symptoms}</p>
-                    <p><strong>Prescription:</strong> {appointment.prescription}</p>
-                  </div>
-                ))}
+                  ))
+                )}
               </TabsContent>
               <TabsContent value="upcoming">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <p className="font-semibold">Dr. Williams</p>
-                    <p className="text-sm text-muted-foreground">General Checkup</p>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <span>July 15, 2023</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4" />
-                    <span>10:00 AM</span>
-                  </div>
-                </div>
+                {upcomingAppointments.length === 0 ? (
+                  <p>No Upcoming Appointments!</p>
+                ) : (
+                  upcomingAppointments.map((appointment) => (
+                    <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
+                      <div className="flex justify-start items-center mb-2">
+                        <span className="font-semibold">{appointment.doctor}</span>
+                        <Badge variant="outline">
+                          {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
+                        </Badge>
+                      </div>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
+                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
+                    </div>
+                  ))
+                )}
               </TabsContent>
+
             </Tabs>
           </CardContent>
         </Card>
@@ -158,7 +179,7 @@ const Dashboard = () => {
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Health Scores */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="text-lg">Health Scores</CardTitle>
             </CardHeader>
@@ -185,10 +206,10 @@ const Dashboard = () => {
                 <Progress value={90} className="bg-green-100" indicatorClassName="bg-green-600" />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Current Conditions */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="text-lg">Current Conditions</CardTitle>
             </CardHeader>
@@ -208,10 +229,10 @@ const Dashboard = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Recent Activities */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="text-lg">Recent Activities</CardTitle>
             </CardHeader>
@@ -238,10 +259,10 @@ const Dashboard = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
-        {/* Feedback Section */}
+        {/* Feedback Section
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Feedback</CardTitle>
@@ -279,10 +300,8 @@ const Dashboard = () => {
           <CardFooter>
             <Button className="bg-green-600 hover:bg-green-700 text-white">Submit Feedback</Button>
           </CardFooter>
-        </Card>
+        </Card> */}
       </div>
     </div>
   )
 }
-
-export default Dashboard;
