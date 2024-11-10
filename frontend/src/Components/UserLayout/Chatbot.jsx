@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, Stethoscope } from 'lucide-react';
-import { FaMicrophone, FaPaperPlane } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import {useEffect, useRef, useState} from 'react';
+import {Stethoscope, X} from 'lucide-react';
+import {FaMicrophone, FaPaperPlane} from "react-icons/fa";
+import {Link} from 'react-router-dom';
 import axios from 'axios';
+import Global from '../../Utils/Global';
+import {toast} from "sonner";
 
 const Chatbot = () => {
     const [userInput, setUserInput] = useState("");
@@ -17,6 +19,34 @@ const Chatbot = () => {
     const messagesEndRef = useRef(null);
     const recognition = useRef(null);
     const synth = window.speechSynthesis;
+
+    const doctorQueryPatterns = [
+        // Direct requests for doctor suggestions
+        /suggest(?:\s+me)?\s+doctors?/i,  // Added to catch "suggest me doctors"
+        /doctor suggestions?/i,
+        /suggest(?:ions? for)? doctors?/i,
+        /recommend(?:ations? for)? doctors?/i,
+
+        // Different ways to ask for suggestions
+        /(?:show|tell|give)(?:\s+me)?\s+(?:some\s+)?doctors?/i,
+        /(?:need|want)(?:\s+some)?\s+doctors?/i,
+        /looking\s+for\s+(?:a\s+)?doctor/i,
+
+        // Consultation related
+        /(?:want|need|looking) to (?:see|consult|meet|visit) (?:a |the )?doctor/i,
+        /(?:book|schedule|make) (?:a |an )?appointment/i,
+        /(?:find|search for) (?:a |the )?doctor/i,
+
+        // Health concerns
+        /(?:medical|health) (?:advice|help|assistance)/i,
+        /(?:feel|feeling) (?:sick|unwell|ill)/i,
+        /(?:have|having) (?:health|medical) (?:issues?|problems?|concerns?)/i
+    ];
+
+// Function to check if input matches any medical query patterns
+    function isDoctorQuery(userInput) {
+        return doctorQueryPatterns.some(pattern => pattern.test(userInput));
+    }
 
     useEffect(() => {
         // Initialize speech recognition
@@ -65,7 +95,7 @@ const Chatbot = () => {
     }, [messages]);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     };
 
     const toggleListening = () => {
@@ -101,6 +131,15 @@ const Chatbot = () => {
             };
             setMessages(prev => [...prev, userMessage]);
             setUserInput('');
+
+            if (isDoctorQuery(userMessage.content.trim())) {
+                setMessages(prev => [...prev, {
+                    type: 'bot',
+                    content: "Here are our available doctors for consultation:",
+                    isDoctorList: true
+                }]);
+                return;
+            }
 
             const response = await axios.post('http://37.27.81.8:9001/send_message', {
                 message: userMessage.content,
@@ -189,13 +228,89 @@ const Chatbot = () => {
         synth.speak(speech);
     };
 
-    const Message = ({ message, index }) => {
+    const Message = ({message, index}) => {
         const isUser = message.type === 'user';
         const isError = message.type === 'error';
         const isSpeaking = currentSpeakingIndex === index;
+        const [doctorsData, setDoctorsData] = useState(null);
+
+        const createAppointment = async (doctorEmail) => {
+            try {
+                if(!Global.user){
+                    toast.error("Please login to book an appointment");
+                    return;
+                }
+                if(Global.user.subscription === 'FREE'){
+                    toast.error("Please upgrade to premium to book an appointment");
+                    return;
+                }
+                const response = await Global.httpPost('/appointment/createAppointment', {
+                    time: new Date(doctorsData.nextAvailableTime),
+                    hosted_by: doctorEmail,
+                    attended_by: Global.user.email
+                });
+
+                console.log("Appointment created:", response);
+
+                window.location.href = 'meetings/' + response.meeting_id;
+            } catch (error) {
+                console.error('Error creating appointment:', error);
+                setMessages(prev => [...prev, {
+                    type: 'error',
+                    content: "Sorry, there was an error scheduling your appointment. Please try again."
+                }]);
+            }
+        };
+
+
+        useEffect(() => {
+            // Fetch doctors data when message is a doctor list
+            const fetchDoctors = async () => {
+                if (message.isDoctorList) {
+                    try {
+                        const response = await Global.httpGet('/appointment/getAvailableDoctors');
+                        console.log(response)
+                        setDoctorsData(response.data);
+                    } catch (error) {
+                        console.error('Error fetching doctors:', error);
+                    }
+                }
+            };
+
+            fetchDoctors();
+        }, [message.isDoctorList]);
+
+        if (message.isDoctorList && doctorsData) {
+            return (
+                <div className="flex justify-start mb-4">
+                    <div className="max-w-[70%] p-3 rounded-lg bg-gray-100 text-gray-800">
+                        <strong>HealAI:</strong>
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-600">
+                                Next available appointment: {new Date(doctorsData.nextAvailableTime).toLocaleString()}
+                            </p>
+                            <div className="space-y-2 mt-3">
+                                {doctorsData.availableDoctors.map((doctor, idx) => (
+                                    <div key={idx} className="p-3 bg-white rounded-lg shadow-sm">
+                                        <p className="font-medium">Dr. {doctor.firstName} {doctor.lastName}</p>
+                                        <p className="text-sm text-gray-600">{doctor.email}</p>
+                                        <button
+                                            onClick={() => createAppointment(doctor.email)}
+                                            className="mt-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors"
+                                        >
+                                            Schedule Appointment
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         return (
-            <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`} key={index}>
+            <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
                 <div className={`max-w-[70%] p-3 rounded-lg ${
                     isUser ? 'bg-teal-600 text-white' :
                         isError ? 'bg-red-100 text-red-600' :
@@ -207,7 +322,6 @@ const Chatbot = () => {
                     ) : (
                         <div className="relative">
                             {createWordSpans(message.content)}
-
                         </div>
                     )}
                 </div>
@@ -221,10 +335,12 @@ const Chatbot = () => {
                 <div className="flex justify-center p-4 items-center h-full bg-gradient-to-r from-gray-100 to-gray-200">
                     <div className="flex flex-col w-full max-w-4xl bg-white rounded-2xl shadow-md h-full">
                         {/* Header */}
-                        <div className="flex items-center rounded-t-xl justify-between p-6 bg-gradient-to-r from-teal-500 to-teal-600">
+                        <div
+                            className="flex items-center rounded-t-xl justify-between p-6 bg-gradient-to-r from-teal-500 to-teal-600">
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                                    <Stethoscope className="w-6 h-6 text-teal-600" />
+                                <div
+                                    className="w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
+                                    <Stethoscope className="w-6 h-6 text-teal-600"/>
                                 </div>
                                 <div>
                                     <span className="text-white font-bold text-lg">
@@ -236,8 +352,9 @@ const Chatbot = () => {
                                 </div>
                             </div>
                             <Link to='/'>
-                                <button className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
-                                    <X className="w-5 h-5" />
+                                <button
+                                    className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
+                                    <X className="w-5 h-5"/>
                                 </button>
                             </Link>
                         </div>
@@ -263,7 +380,7 @@ const Chatbot = () => {
                         {/* Messages Container */}
                         <div className="flex-grow overflow-y-auto p-5 space-y-4">
                             {messages.map((message, index) => (
-                                <Message key={index} message={message} index={index} />
+                                <Message key={index} message={message} index={index}/>
                             ))}
                             {isLoading && (
                                 <div className="flex justify-start">
@@ -272,7 +389,7 @@ const Chatbot = () => {
                                     </div>
                                 </div>
                             )}
-                            <div ref={messagesEndRef} />
+                            <div ref={messagesEndRef}/>
                         </div>
 
                         {/* Listen Button Below the Messages */}
@@ -307,7 +424,7 @@ const Chatbot = () => {
                                 aria-label="Voice Input"
                                 disabled={isLoading}
                             >
-                                <FaMicrophone />
+                                <FaMicrophone/>
                             </button>
                             <button
                                 onClick={handleSendMessage}
@@ -318,7 +435,7 @@ const Chatbot = () => {
                                 }`}
                                 aria-label="Send Message"
                             >
-                                <FaPaperPlane />
+                                <FaPaperPlane/>
                             </button>
                             <style jsx>{`
                                 .tts-word {
@@ -335,9 +452,15 @@ const Chatbot = () => {
                                 }
 
                                 @keyframes pulse {
-                                    0% { opacity: 1; }
-                                    50% { opacity: 0.5; }
-                                    100% { opacity: 1; }
+                                    0% {
+                                        opacity: 1;
+                                    }
+                                    50% {
+                                        opacity: 0.5;
+                                    }
+                                    100% {
+                                        opacity: 1;
+                                    }
                                 }
 
                                 .speaking-indicator {

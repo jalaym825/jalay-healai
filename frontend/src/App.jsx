@@ -58,7 +58,6 @@ function App() {
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
-            <Route path="dashboard" element={<Dashboard />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />
