@@ -21,6 +21,7 @@ import Global from './Utils/Global';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const loginRequiredRoutes = ["/profile", "/dashboard"];
   useEffect(() => {
     async function fetchUser() {
       setTimeout(async () => {
@@ -28,6 +29,9 @@ function App() {
           const user = await Global.getUser();
           Global.user = user;
         } finally {
+          if (!Global.user && loginRequiredRoutes.includes(window.location.pathname)) {
+            window.location.href = "/login";
+          }
           setIsLoaded(true);
         }
       }, 1500);
@@ -35,7 +39,6 @@ function App() {
     fetchUser();
   }, []);
 
-  const loginRequiredRoutes = ["/profile", "/dashboard"];
 
   return (
     <>
