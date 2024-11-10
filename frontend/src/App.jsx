@@ -20,7 +20,7 @@ import Global from './Utils/Global';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const loginRequiredRoutes = ["/profile", "/dashboard"];
+  const loginRequiredRoutes = ["profile", "dashboard", "meetings"];
   useEffect(() => {
     async function fetchUser() {
       setTimeout(async () => {
@@ -28,7 +28,8 @@ function App() {
           const user = await Global.getUser();
           Global.user = user;
         } finally {
-          if (!Global.user && loginRequiredRoutes.includes(window.location.pathname)) {
+          const page = window.location.pathname.split("/")[1];
+          if (!Global.user && loginRequiredRoutes.includes(page)) {
             window.location.href = "/login";
           }
           setIsLoaded(true);
@@ -44,11 +45,12 @@ function App() {
       {isLoaded ? (
         <Routes>
           <Route path="/" element={<UserLayout />}>
-            <Route path="" element={<Home />} />
+            <Route path="" element={<Chatbot />} />
+            <Route path="/Chatbot" element={<Chatbot />} />
             <Route path="discussion" element={<DiscussionForm />} />
             <Route path="services" element={<h1>Services</h1>} />
             <Route path="contact" element={<h1>Contact</h1>} />
-            <Route path='chatbot' element={<Chatbot />} />
+            <Route path='home' element={<Home />} />
             <Route path='bookappointment' element={<BookAppointment />} />
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />

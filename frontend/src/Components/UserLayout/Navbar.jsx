@@ -34,17 +34,17 @@ export default function NavBar() {
 
                             <nav className="hidden md:flex flex-1 justify-center lg:justify-start lg:mr-14">
                                 <div className="flex gap-4 font-dm-sans">
-                                    <Link to='/' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                    <Link to='/home' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Home
                                     </Link>
                                     <Link to='/Chatbot' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Chatbot
                                     </Link>
                                     <Link to='/discussion' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Discussion 
+                                        Discussion
                                     </Link>
                                     <Link to='/dashboard' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Dashboard 
+                                        Dashboard
                                     </Link>
                                 </div>
                             </nav>
