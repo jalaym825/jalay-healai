@@ -13,7 +13,11 @@ const getPrescription = asyncHandler(async (req, res, next) => {
         },
         take: 1,
         include: {
-            Prescription_Medicine: true
+            Prescription_Medicine: {
+                include: {
+                    medicine: true
+                }
+            }
         }
     });
 
