@@ -15,6 +15,7 @@ export default function Component() {
   const [feedback, setFeedback] = useState('')
   const [rating, setRating] = useState(0)
   const [appointments, setAppointments] = useState([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
 
   // const appointments = [
   //   { id: 1, date: '2023-06-15', doctor: 'Dr. Smith', symptoms: 'Headache, Fever', prescription: 'Paracetamol 500mg' },
@@ -23,9 +24,10 @@ export default function Component() {
 
   useEffect(() => {
     (async () => {
-      const appointmentResponse = await Global.httpPost("/appointment/getApppointment?status=past");
+      const appointmentResponse = await Global.httpGet("/appointment/getAppointment?status=past");
+      const upcomingAppointmentResponse = await Global.httpGet("/appointment/getAppointment?status=upcoming");
       setAppointments(appointmentResponse.data);
-      console.log(appointmentResponse);
+      setUpcomingAppointments(upcomingAppointmentResponse.data);
     })();
   }, [])
 
@@ -38,7 +40,7 @@ export default function Component() {
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <Avatar className="h-16 w-16 bg-green-100">
-              <AvatarFallback className="text-green-700">JD</AvatarFallback>
+              <AvatarFallback className="text-green-700"><img src="https://png.pngtree.com/png-clipart/20231001/original/pngtree-3d-illustration-avatar-profile-man-png-image_13026634.png" alt="" /></AvatarFallback>
             </Avatar>
             <div>
               <h2 className="font-semibold text-xl">{Global.user.firstName}</h2>
@@ -74,13 +76,13 @@ export default function Component() {
                 <p className="text-sm text-muted-foreground">175 cm</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-green-600" />
               <div>
                 <p className="text-sm font-medium">Blood Pressure</p>
                 <p className="text-sm text-muted-foreground">120/80 mmHg</p>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2">
               <Phone className="h-5 w-5 text-green-600" />
               <div>
@@ -104,33 +106,42 @@ export default function Component() {
                 <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
               </TabsList>
               <TabsContent value="previous">
-                {appointments.map((appointment) => (
-                  <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold">{appointment.doctor}</span>
-                      <Badge variant="outline">{new Date(appointment.date).toLocaleDateString()}</Badge>
+                {appointments.length === 0 ? (
+                  <p>No Past Appointments!</p>
+                ) : (
+                  appointments.map((appointment) => (
+                    <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
+                      <div className="flex justify-start items-center mb-2">
+                        <span className="font-semibold">{appointment.doctor}</span>
+                        <Badge variant="outline">
+                          {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
+                        </Badge>
+                      </div>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
+                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
                     </div>
-                    <p><strong>Symptoms:</strong> {appointment.symptoms}</p>
-                    <p><strong>Prescription:</strong> {appointment.prescription}</p>
-                  </div>
-                ))}
+                  ))
+                )}
               </TabsContent>
               <TabsContent value="upcoming">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <p className="font-semibold">Dr. Williams</p>
-                    <p className="text-sm text-muted-foreground">General Checkup</p>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <span>July 15, 2023</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4" />
-                    <span>10:00 AM</span>
-                  </div>
-                </div>
+                {upcomingAppointments.length === 0 ? (
+                  <p>No Upcoming Appointments!</p>
+                ) : (
+                  upcomingAppointments.map((appointment) => (
+                    <div key={appointment.id} className="mb-4 p-4 border rounded-lg">
+                      <div className="flex justify-start items-center mb-2">
+                        <span className="font-semibold">{appointment.doctor}</span>
+                        <Badge variant="outline">
+                          {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
+                        </Badge>
+                      </div>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
+                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
+                    </div>
+                  ))
+                )}
               </TabsContent>
+
             </Tabs>
           </CardContent>
         </Card>
