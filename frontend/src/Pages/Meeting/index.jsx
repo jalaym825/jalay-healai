@@ -52,8 +52,10 @@ export default function App() {
 
                 // Fetch token and appointmentId
                 const { token, appointmentId } = await Global.httpPost('/appointment/getToken', {
-                    userId: sanitizeUserId(Global.user.email)
+                    userId: sanitizeUserId(Global.user.email),
+                    meetingId
                 });
+
 
                 setAppointmentId(appointmentId); // Set appointmentId from API response
 
