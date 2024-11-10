@@ -4,7 +4,7 @@ const {Prisma:prisma} = require('../../utils/index')
 const getForums = expressAsyncHandler(async(req, res, next) => {
     const forums = await prisma.forum.findMany({
         orderBy: {
-            createdAt: 'asc'
+            createdAt: 'desc'
         },
         include: {
             original_message: true
