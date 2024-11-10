@@ -16,6 +16,7 @@ export default function Component() {
   const [rating, setRating] = useState(0)
   const [appointments, setAppointments] = useState([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [prescription, setPrescription] = useState([]);
 
   // const appointments = [
   //   { id: 1, date: '2023-06-15', doctor: 'Dr. Smith', symptoms: 'Headache, Fever', prescription: 'Paracetamol 500mg' },
@@ -26,8 +27,11 @@ export default function Component() {
     (async () => {
       const appointmentResponse = await Global.httpGet("/appointment/getAppointment?status=past");
       const upcomingAppointmentResponse = await Global.httpGet("/appointment/getAppointment?status=upcoming");
+      const prescriptionResponse = await Global.httpGet("/prescription/getPrescription");
       setAppointments(appointmentResponse.data);
       setUpcomingAppointments(upcomingAppointmentResponse.data);
+      console.log(appointmentResponse.data)
+      setPrescription(prescriptionResponse.data[0].Prescription_Medicine);
     })();
   }, [])
 
@@ -117,8 +121,7 @@ export default function Component() {
                           {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
                         </Badge>
                       </div>
-                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
-                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by_user.firstName} {appointment.hosted_by_user.lastName} </p>
                     </div>
                   ))
                 )}
@@ -135,8 +138,7 @@ export default function Component() {
                           {appointment.time.split("T")[1].slice(0, 5)} {appointment.time.split("T")[0]}
                         </Badge>
                       </div>
-                      <p><strong>Doctor:</strong> {appointment.hosted_by}</p>
-                      <p><strong>Prescription:</strong> {appointment.prescription}</p>
+                      <p><strong>Doctor:</strong> {appointment.hosted_by_user.firstName} {appointment.hosted_by_user.lastName} </p>
                     </div>
                   ))
                 )}
@@ -152,28 +154,18 @@ export default function Component() {
             <CardTitle className="text-lg">Medication Schedule</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-green-700">Morning</h3>
-                <ul className="space-y-2">
-                  <li className="text-sm">• Lisinopril 10mg</li>
-                  <li className="text-sm">• Vitamin D3</li>
-                </ul>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-green-700">Afternoon</h3>
-                <ul className="space-y-2">
-                  <li className="text-sm">• Allergy Medicine</li>
-                </ul>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-green-700">Evening</h3>
-                <ul className="space-y-2">
-                  <li className="text-sm">• Omega-3</li>
-                  <li className="text-sm">• Multivitamin</li>
-                </ul>
-              </div>
-            </div>
+            {
+              prescription
+                .map((data, index) => (
+                  <div key={index} className="grid gap-4 md:grid-cols-3 mt-5">
+                    <div className="bg-green-50 p-4 rounded-lg  border border-green-700">
+                      <h3 className="font-semibold mb-2 text-green-700">{data.time}</h3>
+                      <ul className="space-y-2">
+                        <li className="text-sm">• {data.medicine.name} x {data.quantity}</li>
+                      </ul>
+                    </div>
+                  </div>
+                ))}
           </CardContent>
         </Card>
 
