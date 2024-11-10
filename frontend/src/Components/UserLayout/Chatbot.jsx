@@ -12,8 +12,11 @@ const Chatbot = () => {
     const [selectedLanguage, setSelectedLanguage] = useState("en-US");
     const [audioEnabled, setAudioEnabled] = useState(false);
     const [isListening, setIsListening] = useState(false);
+    const [currentSpeakingIndex, setCurrentSpeakingIndex] = useState(null);
+    const [highlightIndex, setHighlightIndex] = useState(0);
     const messagesEndRef = useRef(null);
     const recognition = useRef(null);
+    const synth = window.speechSynthesis;
 
     useEffect(() => {
         // Initialize speech recognition
@@ -132,29 +135,6 @@ const Chatbot = () => {
             .replace(/\*\*/g, '');
     };
 
-    const speakText = (text) => {
-        const speech = new SpeechSynthesisUtterance(text);
-        speech.lang = selectedLanguage;
-        speech.rate = 1;
-        speech.pitch = 1;
-        window.speechSynthesis.speak(speech);
-    };
-
-    const Message = ({ message, index }) => {
-        const isUser = message.type === 'user';
-        const isError = message.type === 'error';
-
-        return (
-            <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`} key={index}>
-                <div className={`max-w-[70%] p-3 rounded-lg ${isUser ? 'bg-teal-600 text-white' :
-                    isError ? 'bg-red-100 text-red-600' :
-                        'bg-gray-100 text-gray-800'}`}>
-                    <strong>{isUser ? 'You' : 'HealAI'}:</strong> {message.content}
-                </div>
-            </div>
-        );
-    };
-
     const toggleAudio = (messageIndex) => {
         const botMessage = messages[messageIndex];
         if (audioEnabled) {
@@ -163,6 +143,76 @@ const Chatbot = () => {
             speakText(botMessage.content);
         }
         setAudioEnabled(!audioEnabled);
+    };
+
+    const createWordSpans = (text) => {
+        return text.split(' ').map((word, index) => (
+            <span
+                key={index}
+                className={`tts-word ${highlightIndex === index && currentSpeakingIndex !== null ? 'highlighted' : ''}`}
+            >
+                {word}{' '}
+            </span>
+        ));
+    };
+
+    const speakText = (text, messageIndex) => {
+        if (currentSpeakingIndex !== null) {
+            synth.cancel();
+            setCurrentSpeakingIndex(null);
+            setHighlightIndex(0);
+            setAudioEnabled(false);
+            return;
+        }
+
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = selectedLanguage;
+        speech.rate = 1;
+        speech.pitch = 1;
+
+        // Word boundary event for highlighting
+        speech.onboundary = (event) => {
+            if (event.name === 'word') {
+                setHighlightIndex(prev => prev + 1);
+            }
+        };
+
+        speech.onend = () => {
+            setCurrentSpeakingIndex(null);
+            setHighlightIndex(0);
+            setAudioEnabled(false);
+        };
+
+        setCurrentSpeakingIndex(messageIndex);
+        setHighlightIndex(0);
+        setAudioEnabled(true);
+        synth.speak(speech);
+    };
+
+    const Message = ({ message, index }) => {
+        const isUser = message.type === 'user';
+        const isError = message.type === 'error';
+        const isSpeaking = currentSpeakingIndex === index;
+
+        return (
+            <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`} key={index}>
+                <div className={`max-w-[70%] p-3 rounded-lg ${
+                    isUser ? 'bg-teal-600 text-white' :
+                        isError ? 'bg-red-100 text-red-600' :
+                            'bg-gray-100 text-gray-800'
+                }`}>
+                    <strong>{isUser ? 'You' : 'HealAI'}:</strong>{' '}
+                    {isUser ? (
+                        message.content
+                    ) : (
+                        <div className="relative">
+                            {createWordSpans(message.content)}
+
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -251,9 +301,9 @@ const Chatbot = () => {
                             <button
                                 onClick={toggleListening}
                                 className={`p-3 border rounded-lg transition ${isListening
-                                        ? 'border-red-500 text-red-500 animate-pulse'
-                                        : 'border-green-500 text-green-500 hover:bg-gray-100'
-                                    }`}
+                                    ? 'border-red-500 text-red-500 animate-pulse'
+                                    : 'border-green-500 text-green-500 hover:bg-gray-100'
+                                }`}
                                 aria-label="Voice Input"
                                 disabled={isLoading}
                             >
@@ -263,13 +313,37 @@ const Chatbot = () => {
                                 onClick={handleSendMessage}
                                 disabled={isLoading || !userInput.trim()}
                                 className={`p-3 rounded-lg transition ${isLoading || !userInput.trim()
-                                        ? 'bg-gray-300 cursor-not-allowed'
-                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
-                                    }`}
+                                    ? 'bg-gray-300 cursor-not-allowed'
+                                    : 'bg-teal-500 hover:bg-teal-600 text-white'
+                                }`}
                                 aria-label="Send Message"
                             >
                                 <FaPaperPlane />
                             </button>
+                            <style jsx>{`
+                                .tts-word {
+                                    display: inline-block;
+                                    color: #666;
+                                    transition: all 0.2s ease-in-out;
+                                    padding: 0 2px;
+                                }
+
+                                .tts-word.highlighted {
+                                    color: #000;
+                                    font-weight: 600;
+                                    transform: scale(1.05);
+                                }
+
+                                @keyframes pulse {
+                                    0% { opacity: 1; }
+                                    50% { opacity: 0.5; }
+                                    100% { opacity: 1; }
+                                }
+
+                                .speaking-indicator {
+                                    animation: pulse 1.5s infinite;
+                                }
+                            `}</style>
                         </div>
                     </div>
                 </div>
