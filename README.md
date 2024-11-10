@@ -7,6 +7,14 @@ An AI-powered platform designed to provide immediate mental health support, reso
 - [Watch Here (Doctor View)](https://drive.google.com/file/d/1WYn8ppoBfVHGonP4qVWOVFlASCEUgvOR/view?usp=sharing)
 - [Watch Here (Patient View)](https://drive.google.com/file/d/1YQiC5sVuCsGktwmpVOpYbGfAinbajvXw/view?usp=sharing)
 
+## Home Page View 📄
+<img width="1470" alt="Screenshot 2024-11-10 at 11 55 20 AM" src="https://github.com/user-attachments/assets/9a89b755-b694-480d-9161-62ff8b7c5b04">
+<img width="1470" alt="Screenshot 2024-11-10 at 11 55 27 AM" src="https://github.com/user-attachments/assets/19f03f8c-4569-492d-8784-8607d02eae1d">
+<img width="1470" alt="Screenshot 2024-11-10 at 11 55 35 AM" src="https://github.com/user-attachments/assets/db802baf-4f99-446d-ad7c-3156e95d499d">
+<img width="1470" alt="Screenshot 2024-11-10 at 11 55 42 AM" src="https://github.com/user-attachments/assets/9d2035ba-f5f7-445e-9a3f-2128b37ad1dd">
+<img width="1470" alt="Screenshot 2024-11-10 at 11 55 48 AM" src="https://github.com/user-attachments/assets/262d51ec-56e7-45ba-bad6-daec90cfa4fa">
+
+
 ## Features 🌟
 
 ### 🤖 AI-Driven Mental Health Chatbots
