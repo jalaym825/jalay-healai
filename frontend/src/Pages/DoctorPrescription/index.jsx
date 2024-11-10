@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardFooter, CardTitle } from "../../UIs/shadcn-ui/card";
 import { Button } from "../../UIs/shadcn-ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../UIs/shadcn-ui/select';
@@ -8,11 +8,37 @@ import {
     Plus,
     Save,
     ClipboardCheck,
-    Trash2
+    Trash2,
+    Search
 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import Global from '@/Utils/Global';
 import { toast } from 'sonner';
+
+// Custom debounce hook
+const useDebounce = (callback, delay) => {
+    const timeoutRef = useRef(null);
+
+    const debouncedCallback = useCallback((...args) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            callback(...args);
+        }, delay);
+    }, [callback, delay]);
+
+    React.useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
+    return debouncedCallback;
+};
 
 const DoctorPrescription = () => {
     const { id: appointmentId } = useParams();
@@ -25,8 +51,27 @@ const DoctorPrescription = () => {
             eat_time: 'AFTER'
         }
     ]);
-
     const [loading, setLoading] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+
+    // Search function
+    const searchMedicines = async (query) => {
+        if (!query) {
+            setSearchResults([]);
+            return;
+        }
+        try {
+            const response = await Global.httpGet(`/prescription/search?query=${query}`);
+            console.log(response);
+            setSearchResults(response.results || []);
+        } catch (error) {
+            console.error('Search error:', error);
+            toast.error('Failed to search medicines');
+        }
+    };
+
+    // Debounced search
+    const debouncedSearch = useDebounce(searchMedicines, 300);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,6 +101,11 @@ const DoctorPrescription = () => {
         setMedications(updatedMedications);
     };
 
+    const handleSearchInputChange = (query, index) => {
+        handleMedicationChange(index, 'medicine_id', query);
+        debouncedSearch(query);
+    };
+
     const handleAddMedication = () => {
         setMedications([
             ...medications,
@@ -74,6 +124,11 @@ const DoctorPrescription = () => {
         }
     };
 
+    const handleSelectMedicine = (medicineId, index) => {
+        handleMedicationChange(index, 'medicine_id', medicineId);
+        setSearchResults([]);
+    };
+
     return (
         <div className="max-w-5xl mx-auto p-4">
             <form onSubmit={handleSubmit}>
@@ -85,7 +140,6 @@ const DoctorPrescription = () => {
                                 Date: {new Date().toLocaleDateString()}
                             </div>
                         </div>
-        
                     </CardHeader>
 
                     <CardContent className="p-6 space-y-6 w-full">
@@ -125,12 +179,28 @@ const DoctorPrescription = () => {
                                                 <label className="text-sm font-medium text-teal-700">
                                                     Medicine ID
                                                 </label>
-                                                <Input
-                                                    value={medication.medicine_id}
-                                                    onChange={(e) => handleMedicationChange(index, 'medicine_id', e.target.value)}
-                                                    placeholder="Enter medicine ID"
-                                                    className="w-full border-teal-200 focus:border-teal-500 focus:ring-teal-500"
-                                                />
+                                                <div className="relative">
+                                                    <Input
+                                                        value={medication.medicine_id}
+                                                        onChange={(e) => handleSearchInputChange(e.target.value, index)}
+                                                        placeholder="Search medicine..."
+                                                        className="w-full border-teal-200 focus:border-teal-500 focus:ring-teal-500 pr-8"
+                                                    />
+                                                    <Search className="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                                    {searchResults.length > 0 && (
+                                                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                                                            {searchResults.map((result) => (
+                                                                <div
+                                                                    key={result.id}
+                                                                    className="px-4 py-2 hover:bg-teal-50 cursor-pointer"
+                                                                    onClick={() => handleSelectMedicine(result.id, index)}
+                                                                >
+                                                                    {result.name}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
 
                                             <div className="space-y-2">
@@ -190,9 +260,8 @@ const DoctorPrescription = () => {
                         <div className="flex justify-end space-x-4 w-full">
                             <Button
                                 type="submit"
-                                className={`bg-gradient-to-r from-teal-500 to-teal-700 text-white hover:from-teal-600 hover:to-teal-800 rounded-xl px-6 py-2 transform transition-transform hover:scale-105 ${loading ? 'cursor-not-allowed opacity-50' : ''
-                                    }`}
-                                disabled={loading} // Disable button when loading
+                                className={`bg-gradient-to-r from-teal-500 to-teal-700 text-white hover:from-teal-600 hover:to-teal-800 rounded-xl px-6 py-2 transform transition-transform hover:scale-105 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
+                                disabled={loading}
                             >
                                 {loading ? (
                                     <div className="flex items-center">

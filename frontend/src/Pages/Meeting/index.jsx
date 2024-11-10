@@ -129,7 +129,7 @@ export const MyUILayout = ({ call, appointmentId }) => {
             if (call && call.state.callingState === CallingState.JOINED) {
                 await call.leave();
             }
-            if (appointmentId) {
+            if (appointmentId && Global.user.role === 'DOCTOR') {
                 navigate(`/appointments/${appointmentId}/prescription`); // Redirect to prescription page after leaving
             } else {
                 navigate('/'); // Fallback if no appointmentId

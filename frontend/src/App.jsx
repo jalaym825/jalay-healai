@@ -18,7 +18,6 @@ import { Signup } from './Pages/SignUp';
 import Dashboard from "./Pages/Dashboard";
 import Global from './Utils/Global';
 
-
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const loginRequiredRoutes = ["/profile", "/dashboard"];
