@@ -13,7 +13,6 @@ import {
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import './meeting.css';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Global from '@/Utils/Global';
 import { useParams } from 'react-router-dom';
 

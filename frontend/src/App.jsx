@@ -15,6 +15,8 @@ import Meeting from "./Pages/Meeting/index";
 import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
 import Global from './Utils/Global';
+import Dashboard from "./Pages/Dashboard";
+import Doctordashboard from './Pages/DoctorDashboard'
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -48,6 +50,7 @@ function App() {
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
             <Route path="meeting/:meetingId" element={<Meeting />} />
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />

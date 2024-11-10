@@ -37,17 +37,11 @@ export default function NavBar() {
                                     <Link to='/' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Home
                                     </Link>
-                                    <Link to='/services' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Services
-                                    </Link>
-                                    <Link to='/doctors' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Doctors
+                                    <Link to='/Chatbot' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Chatbot
                                     </Link>
                                     <Link to='/discussion' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Discussion 
-                                    </Link>
-                                    <Link to='/contact' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Contact
                                     </Link>
                                 </div>
                             </nav>
