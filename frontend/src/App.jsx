@@ -21,7 +21,7 @@ import Subscription from './Pages/BookAppointment/Subscription';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const loginRequiredRoutes = ["/profile", "/dashboard"];
+  const loginRequiredRoutes = ["profile", "dashboard", "meetings"];
   useEffect(() => {
     async function fetchUser() {
       setTimeout(async () => {
@@ -29,7 +29,8 @@ function App() {
           const user = await Global.getUser();
           Global.user = user;
         } finally {
-          if (!Global.user && loginRequiredRoutes.includes(window.location.pathname)) {
+          const page = window.location.pathname.split("/")[1];
+          if (!Global.user && loginRequiredRoutes.includes(page)) {
             window.location.href = "/login";
           }
           setIsLoaded(true);
@@ -58,7 +59,6 @@ function App() {
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
-            <Route path="dashboard" element={<Dashboard />} />
             <Route path="subscription" element={<Subscription />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>

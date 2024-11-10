@@ -78,7 +78,7 @@ const createAppointment = asyncHandler(async (req, res, next) => {
     })
 
     await Mailer.sendAppointmentMail(
-        'jalaym825@gmail.com',
+        [hosted_by, attended_by],
         meeting_id
     );
 

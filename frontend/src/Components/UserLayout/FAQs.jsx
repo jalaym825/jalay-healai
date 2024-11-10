@@ -11,7 +11,6 @@ const FAQs = () => {
         { question: "How can I maintain a healthy lifestyle?", answer: "Maintaining a healthy lifestyle includes eating a balanced diet, exercising regularly, getting enough sleep, staying hydrated, and avoiding tobacco and excessive alcohol consumption." },
         { question: "What is the best way to manage stress?", answer: "To manage stress, try techniques such as deep breathing exercises, meditation, physical activity, and seeking support from friends, family, or a mental health professional." }
     ];
-    
     return (
         <>
             <div className="absolute inset-0 opacity-10">

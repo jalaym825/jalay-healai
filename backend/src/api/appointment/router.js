@@ -12,6 +12,6 @@ const router = Router();
 router.post("/createAppointment", verifyJWT, validateZodSchema(AppointmentSchema), createAppointment)
 router.get('/getAppointment', verifyJWT, getAppointment)
 router.post('/getToken', verifyJWT, getToken)
-router.get('/getAvailableDoctors', verifyJWT, getAvailableDoctors)
+router.get('/getAvailableDoctors', getAvailableDoctors)
 
 module.exports = router;

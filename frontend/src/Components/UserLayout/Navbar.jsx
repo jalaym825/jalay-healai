@@ -41,10 +41,10 @@ export default function NavBar() {
                                         Chatbot
                                     </Link>
                                     <Link to='/discussion' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Discussion 
+                                        Discussion
                                     </Link>
                                     <Link to='/dashboard' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Dashboard 
+                                        Dashboard
                                     </Link>
                                 </div>
                             </nav>

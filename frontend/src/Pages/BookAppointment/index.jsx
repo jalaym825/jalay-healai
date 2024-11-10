@@ -16,6 +16,10 @@ const BookAppointment = () => {
 
 
   const bookAppointment = async (id) => {
+    if(Global.user.subscription === "FREE") {
+        alert("Please upgrade to premium subscription to book an appointment");
+        return;
+    }
     const { meeting_id } = await Global.httpPost('/appointment/createAppointment', {
       time: new Date(nextAvailableTime),
       hosted_by: id,

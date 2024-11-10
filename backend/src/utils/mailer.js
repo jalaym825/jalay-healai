@@ -28,7 +28,7 @@ class Mailer {
         })
     }
 
-    async sendAppointmentMail(email, meetingId) {
+    async sendAppointmentMail(emails, meetingId) {
         try {
             const body = {
                 html: `
@@ -41,7 +41,7 @@ class Mailer {
     <p style="color: #888;">Thank you</p>
 </div>`
             }
-            await this.sendMail([email], 'Appointment Schedule', body);
+            await this.sendMail(emails, 'Appointment Schedule', body);
         }
         catch (error) {
             logger.error(`[/appointment/createAppointment] - ${error.stack}`);
