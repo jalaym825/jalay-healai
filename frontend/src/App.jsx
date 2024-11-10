@@ -17,7 +17,6 @@ import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
 import Dashboard from "./Pages/Dashboard";
 import Global from './Utils/Global';
-import Dashboard from './Pages/Dashboard';
 
 
 function App() {
@@ -67,7 +66,7 @@ function App() {
         </Routes>
       ) : (
         <div className="flex h-[80vh] w-full justify-center items-center">
-          <div className="w-[35vw] h-[35vh]">
+          <div className="w-[25vw] h-[25vh]">
             <LottieAnimation animationData={healthLoader} loop={true} />
           </div>
         </div>

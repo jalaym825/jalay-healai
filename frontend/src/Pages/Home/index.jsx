@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="min-h-screen bg-slate-50">
-        <div className="relative bg-gradient-to-r h-[80vh] font-dm-sans from-teal-500 to-teal-700 text-white py-20">
+        <div className="relative bg-gradient-to-r h-[90vh] font-dm-sans from-teal-500 to-teal-700 text-white py-20">
           <div className="absolute inset-0">
             <Particles
               className="absolute inset-0"

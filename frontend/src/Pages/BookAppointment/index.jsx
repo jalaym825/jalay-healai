@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader } from '../../UIs/shadcn-ui/card';
 import { Mail, Phone, User, Calendar, Clock, ChevronRight } from 'lucide-react';
 import { Badge } from '../../UIs/shadcn-ui/badge';
 import Global from '@/Utils/Global';
+import healthLoader from '../../assets/healthLoader.json';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
 
 
 const BookAppointment = () => {
@@ -11,8 +13,8 @@ const BookAppointment = () => {
   const [availableDoctors, setAvailableDoctors] = useState([]);
   const [nextAvailableTime, setNextAvailableTime] = useState('');
 
-  const bookAppointment = async(id) => {
-    const {meeting_id} = await Global.httpPost('/appointment/createAppointment', {
+  const bookAppointment = async (id) => {
+    const { meeting_id } = await Global.httpPost('/appointment/createAppointment', {
       time: new Date(nextAvailableTime),
       hosted_by: id,
       attended_by: Global.user.email
@@ -20,10 +22,11 @@ const BookAppointment = () => {
     window.location.href = 'meetings/' + meeting_id;
   }
 
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAvailableDoctors = async () => {
+      setLoading(true);
       try {
         const response = await Global.httpGet('/appointment/getAvailableDoctors');
         setAvailableDoctors(response.data.availableDoctors);
@@ -31,11 +34,22 @@ const BookAppointment = () => {
         console.log("Response received:", response);
       } catch (error) {
         console.error('Error fetching available doctors:', error);
+      } finally {
+        setLoading(false);
       }
-    }
+    };
     fetchAvailableDoctors();
-  }, [])
+  }, []);
 
+  if (loading) {
+    return (
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <div className="w-[25vw] h-[25vh]">
+          <LottieAnimation animationData={healthLoader} loop={true} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-6xl font-dm-sans mx-auto p-4">
