@@ -92,8 +92,7 @@ const Subscription = () => {
                 }
 
                 const paymentResponse = await Global.httpPost("/razorpay/updateSubscription", body)
-                console.log(response)
-                if (paymentResponse.statusCode == "200") {
+                if (paymentResponse.message === "Subscription buy successfully!") {
                     toast.success(paymentResponse.message);
                 }
 
