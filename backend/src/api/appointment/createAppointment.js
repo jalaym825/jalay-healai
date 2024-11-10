@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { Prisma } = require("../../utils/index");
+const {Mailer} = require("../../utils");
 
 
 function generateSixCharString() {
@@ -75,6 +76,11 @@ const createAppointment = asyncHandler(async (req, res, next) => {
             appointment_link: meeting_id
         }
     })
+
+    await Mailer.sendAppointmentMail(
+        'jalaym825@gmail.com',
+        meeting_id
+    );
 
     return res.status(201).json({
         message: "Appointment Schedule Successfully!",

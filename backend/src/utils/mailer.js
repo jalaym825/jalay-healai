@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer");
 const logger = require("./logger");
-
+require('dotenv').config();
 class Mailer {
     from = process.env.GMAIL;
     transporter;
     constructor() {
+        console.log(process.env.MAILER_MAIL, process.env.MAILER_SECRET);
         this.transporter = nodemailer.createTransport({
             service: "gmail",
             host: "smtp.gmail.com",
@@ -25,6 +26,26 @@ class Mailer {
             subject: subject, // Subject line
             ...body
         })
+    }
+
+    async sendAppointmentMail(email, meetingId) {
+        try {
+            const body = {
+                html: `
+<div
+    style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+    <h2 style="text-align: center; color: #333;">Appointment Schedule</h2>
+    <p>Hello,</p>
+    <p>Your appointment has been scheduled successfully. Your meeting link is <a href="${process.env.FRONTEND_URL}/meetings/${meetingId}">here</a></p>
+    <p>If you did not request this, please ignore this email.</p>
+    <p style="color: #888;">Thank you</p>
+</div>`
+            }
+            await this.sendMail([email], 'Appointment Schedule', body);
+        }
+        catch (error) {
+            logger.error(`[/appointment/createAppointment] - ${error.stack}`);
+        }
     }
 
     async sendResetPasswordLink(email, link) {

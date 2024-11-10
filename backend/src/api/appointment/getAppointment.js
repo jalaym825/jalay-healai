@@ -26,6 +26,10 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                     time: {
                         gt: currentDateTime, // Upcoming appointments
                     }
+                },
+                include: {
+                    Prescription: true,
+                    hosted_by_user: true
                 }
             })
 
@@ -42,6 +46,10 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                     time: {
                         gt: currentDateTime, // Upcoming appointments
                     }
+                },
+                include: {
+                    Prescription: true,
+                    hosted_by_user: true
                 }
             })
 
@@ -64,7 +72,8 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                     },
                 },
                 include: {
-                    Prescription: true
+                    Prescription: true,
+                    hosted_by_user: true
                 }
             });
 
@@ -82,6 +91,10 @@ const getAppointment = asyncHandler(async (req, res, next) => {
                         lt: currentDateTime, // Past appointments
                     },
                 },
+                include: {
+                    Prescription: true,
+                    hosted_by_user: true
+                }
             });
 
             return res.status(200).json({
