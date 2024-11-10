@@ -16,6 +16,7 @@ import Meeting from "./Pages/Meeting/index";
 import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
 import Global from './Utils/Global';
+import Dashboard from './Pages/Dashboard';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
             <Route path="forum/:id" element={<ForumComment />} />
+            <Route path='dashboard' element={<Dashboard />} />
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
 

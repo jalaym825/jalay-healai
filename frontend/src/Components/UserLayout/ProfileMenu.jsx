@@ -17,7 +17,8 @@ export function ProfileMenu({ trigger }) {
 
     const logout = async () => {
         try {
-            await Global.httpPost('/auth/logout');
+            // await Global.httpPost('/auth/logout');
+            localStorage.removeItem('token');
             Global.user = null; // Clear user data
             window.location.href = '/'; // Redirect to home page
         } catch (err) {
