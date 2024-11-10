@@ -141,7 +141,7 @@ const Chatbot = () => {
                 return;
             }
 
-            const response = await axios.post('http://37.27.81.8:9001/send_message', {
+          const response = await axios.post('http://37.27.81.8:9001/send_message', {
                 message: userMessage.content,
                 session_id: sessionId,
                 language: selectedLanguage

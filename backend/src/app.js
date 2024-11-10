@@ -11,6 +11,7 @@ const { errorMiddleware } = require('./middlewares/index');
 const { Prisma } = require('./utils/index');
 const logger = require('./utils/logger.js');
 const prescriptionRouter = require('./api/prescription/router.js');
+const razorPayRouter = require('./api/razorpay/router.js')
 
 const app = express();
 const server = http.createServer(app);
@@ -37,6 +38,7 @@ server.listen(port, () => {
     app.use('/appointment', appointmentRouter);
     app.use('/forums', forumRouter);
     app.use('/prescription', prescriptionRouter);
+    app.use('/razorpay', razorPayRouter);
     app.use(errorMiddleware);
   })
 });
