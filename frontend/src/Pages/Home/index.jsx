@@ -1,5 +1,5 @@
-import React from 'react';
-import Footer from '../../Components/UserLayout/Footer';
+import React from "react";
+import Footer from "../../Components/UserLayout/Footer";
 import {
   Heart,
   Calendar,
@@ -7,13 +7,173 @@ import {
   Clock,
   Activity,
   Stethoscope,
-  FileText
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+  FileText,
+  Truck,
+  Syringe,
+  ArrowRight,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useCallback } from "react";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
-import healthsvg from '../../assets/healthsvg.svg'
+import healthsvg from "../../assets/healthsvg.svg";
+import doctor from "../../assets/doctor.jpg";
+import doctor1 from "../../assets/doctor1.jpg";
+import doctor2 from "../../assets/doctor2.jpg";
+
+const ServicesSection = () => {
+  return (
+    <div className="relative bg-gradient-to-b from-white to-teal-50 py-20 overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-teal-100/30 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-teal-100/30 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-4 h-4 text-teal-200">+</div>
+      <div className="absolute bottom-1/4 right-1/4 w-4 h-4 text-teal-200">
+        +
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold font-montserrat text-teal-900 mb-4">
+            Our Services
+          </h2>
+          <p className="text-teal-600 max-w-2xl mx-auto">
+            Experience comprehensive healthcare with our wide range of medical
+            services designed to meet all your health needs.
+          </p>
+        </div>
+
+        {/* Main Services Grid */}
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Emergency Care Card */}
+          <div className="bg-gradient-to-br from-teal-500 to-teal-600 p-8 rounded-3xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Truck className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-xl font-bold mb-3">Emergency Care</h3>
+            <p className="text-teal-100">
+              24/7 emergency medical services with rapid response and expert
+              care.
+            </p>
+          </div>
+
+          {/* Surgical Services Card */}
+          <div className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center">
+                <Syringe className="w-8 h-8 text-teal-600" />
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-teal-900 mb-3">
+              Surgical Services
+            </h3>
+            <p className="text-teal-600">
+              State-of-the-art surgical facilities with experienced surgeons.
+            </p>
+          </div>
+
+          {/* Pharmacy Services Card */}
+          <div className="bg-gradient-to-br from-teal-500 to-teal-600 p-8 rounded-3xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Activity className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-xl font-bold mb-3">Pharmacy Services</h3>
+            <p className="text-teal-100">
+              Full-service pharmacy with prescription fulfillment and
+              counseling.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DoctorSection = () => {
+  const doctors = [
+    {
+      name: "Rufus Stewart",
+      role: "Radiologist",
+      social: "@reallygreatsite",
+      image: doctor,
+    },
+    {
+      name: "Daniel Gallego",
+      role: "Surgeon",
+      social: "@reallygreatsite",
+      image: doctor2,
+    },
+    {
+      name: "Juliana Silva",
+      role: "Nutritionist",
+      social: "@reallygreatsite",
+      image: doctor1,
+    },
+  ];
+
+  return (
+    <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 min-h-screen py-16 px-4">
+      {/* Background Design Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+        <div className="absolute top-10 left-10 text-emerald-700/20 text-6xl">
+          +
+        </div>
+        <div className="absolute bottom-10 right-10 text-emerald-700/20 text-6xl">
+          +
+        </div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Main Content */}
+        <div className="text-center mb-16">
+          <h1 className="text-white text-5xl font-bold mb-8">Doctor Team</h1>
+          <div className="flex justify-center gap-2 mb-12">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Doctor Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {doctors.map((doctor, index) => (
+            <div key={index} className="w-full">
+              <div className="w-40 h-40 top-20 ml-20   absolute rounded-full overflow-hidden mx-auto border-4 border-white">
+                <img
+                  src={doctor.image}
+                  alt={doctor.name}
+                  className="w-full h-full   object-cover"
+                />
+              </div>
+              <div className="bg-emerald-500 h-[40vh] rounded-3xl p-6 text-center">
+                <div className="relative h-[80px]"></div>
+                <h3 className="text-white text-xl font-bold mb-2">
+                  {doctor.name}
+                </h3>
+                <p className="text-emerald-100 mb-4">{doctor.role}</p>
+                <div className="bg-emerald-700 rounded-full py-2 px-4 text-emerald-100 text-sm">
+                  {doctor.social}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Navigation Arrow */}
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+          <button className="bg-emerald-500 p-4 rounded-full text-white hover:bg-emerald-600 transition-colors">
+            <ArrowRight size={24} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Home = () => {
   const particlesInit = useCallback(async (engine) => {
@@ -86,21 +246,25 @@ const Home = () => {
                 Your Health, Our Priority
               </h1>
               <p className="text-lg font-dm-sans mb-8">
-                Experience world-class healthcare with our team of expert doctors and modern facilities.
+                Experience world-class healthcare with our team of expert
+                doctors and modern facilities.
               </p>
-              <Link to='/bookappointment' className="bg-white text-teal-600 px-6 py-3 rounded-lg font-medium hover:bg-teal-50 mr-4">
+              <Link
+                to="/bookappointment"
+                className="bg-white text-teal-600 px-6 py-3 rounded-lg font-medium hover:bg-teal-50 mr-4"
+              >
                 Book Appointment
               </Link>
               <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-600">
                 Emergency Care
               </button>
             </div>
-            <div className='md:w-[50%] h-full flex justify-center items-center'>
-              <img src={healthsvg} alt='healthsvg' className='p-14' />
+            <div className="md:w-[50%] h-full flex justify-center items-center">
+              <img src={healthsvg} alt="healthsvg" className="p-14" />
             </div>
           </div>
         </div>
-        
+
         {/* Rest of the components remain unchanged */}
         {/* Features */}
         <div className="max-w-6xl font-dm-sans mx-auto px-4 py-16">
@@ -111,7 +275,9 @@ const Home = () => {
                 <Calendar className="h-6 w-6 text-teal-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Online Booking</h3>
-              <p className="text-gray-600">Schedule appointments easily with our online booking system.</p>
+              <p className="text-gray-600">
+                Schedule appointments easily with our online booking system.
+              </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
@@ -119,7 +285,9 @@ const Home = () => {
                 <Activity className="h-6 w-6 text-teal-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">24/7 Emergency</h3>
-              <p className="text-gray-600">Round-the-clock emergency care services available.</p>
+              <p className="text-gray-600">
+                Round-the-clock emergency care services available.
+              </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
@@ -127,47 +295,16 @@ const Home = () => {
                 <Stethoscope className="h-6 w-6 text-teal-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Expert Doctors</h3>
-              <p className="text-gray-600">Access to highly qualified medical professionals.</p>
+              <p className="text-gray-600">
+                Access to highly qualified medical professionals.
+              </p>
             </div>
           </div>
         </div>
 
         {/* Services Section */}
-        <div className="bg-gray-50 py-16">
-          <div className="max-w-6xl font-dm-sans mx-auto px-4">
-            <h2 className="text-3xl font-bold font-montserrat text-center mb-12">Our Services</h2>
-            <div className="grid md:grid-cols-4 gap-6">
-              {/* Service Cards */}
-              <div className="bg-white p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                <div className="bg-teal-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="h-8 w-8 text-teal-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Cardiology</h3>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                <div className="bg-teal-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="h-8 w-8 text-teal-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Diagnostics</h3>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                <div className="bg-teal-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <User className="h-8 w-8 text-teal-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Pediatrics</h3>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                <div className="bg-teal-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="h-8 w-8 text-teal-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Emergency</h3>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ServicesSection />
+        <DoctorSection />
       </div>
 
       <Link
