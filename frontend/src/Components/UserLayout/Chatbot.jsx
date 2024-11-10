@@ -99,7 +99,7 @@ const Chatbot = () => {
             setMessages(prev => [...prev, userMessage]);
             setUserInput('');
 
-            const response = await axios.post('http://37.27.81.8:9001/send_message', {
+            const response = await axios.post('http://localhost:5000/send_message', {
                 message: userMessage.content,
                 session_id: sessionId,
                 language: selectedLanguage

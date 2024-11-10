@@ -37,17 +37,14 @@ export default function NavBar() {
                                     <Link to='/' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Home
                                     </Link>
-                                    <Link to='/services' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Services
-                                    </Link>
-                                    <Link to='/doctors' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Doctors
+                                    <Link to='/Chatbot' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Chatbot
                                     </Link>
                                     <Link to='/discussion' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Discussion 
                                     </Link>
-                                    <Link to='/contact' className="font-medium p-2.5 flex items-center text-md transition-colors ">
-                                        Contact
+                                    <Link to='/dashboard' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Dashboard 
                                     </Link>
                                 </div>
                             </nav>
@@ -63,7 +60,7 @@ export default function NavBar() {
                                     />
                                 ) : (
                                     <Link to="/login">
-                                        <Button size="sm" className='bg-teal-100 text-teal-600 px-4 py-2 w-24 font-dm-sans rounded-lg font-medium hover:bg-teal-100'>
+                                        <Button size="sm" className='bg-teal-100 border border-teal-600 text-teal-600 px-4 py-2 w-24 font-dm-sans rounded-lg font-medium hover:bg-teal-100'>
                                             Login
                                         </Button>
                                     </Link>
