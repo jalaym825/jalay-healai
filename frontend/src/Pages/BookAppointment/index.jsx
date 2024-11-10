@@ -1,110 +1,55 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, User, MessageSquare, ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
-import { Button } from '../../UIs/shadcn-ui/button';
+import React, { useEffect, useState } from 'react';
+import { Button } from '../../UIs/shadcn-ui/button'
+import { Card, CardContent, CardHeader } from '../../UIs/shadcn-ui/card';
+import { Mail, Phone, User, Calendar, Clock, ChevronRight } from 'lucide-react';
+import { Badge } from '../../UIs/shadcn-ui/badge';
+import Global from '@/Utils/Global';
+import healthLoader from '../../assets/healthLoader.json';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
+
 
 const BookAppointment = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [appointmentDetails, setAppointmentDetails] = useState({
-    doctor: '',
-    date: '',
-    time: '',
-    type: '',
-    notes: ''
-  });
 
-  // Available time slots per day
-  const timeSlots = {
-    morning: ['09:00 AM', '10:00 AM', '11:00 AM'],
-    afternoon: ['02:00 PM', '03:00 PM', '04:00 PM'],
-    evening: ['05:00 PM', '06:00 PM', '07:00 PM']
-  };
+  const [availableDoctors, setAvailableDoctors] = useState([]);
+  const [nextAvailableTime, setNextAvailableTime] = useState('');
 
-  // Available doctors and their schedules
-  const doctors = [
-    { id: 'dr1', name: 'Dr. Smith', speciality: 'Cardiologist', availableDays: [1, 2, 3, 4, 5] },
-    { id: 'dr2', name: 'Dr. Johnson', speciality: 'Pediatrician', availableDays: [2, 3, 4, 5, 6] },
-    { id: 'dr3', name: 'Dr. Davis', speciality: 'Neurologist', availableDays: [1, 3, 5] }
-  ];
+  const bookAppointment = async (id) => {
+    const { meeting_id } = await Global.httpPost('/appointment/createAppointment', {
+      time: new Date(nextAvailableTime),
+      hosted_by: id,
+      attended_by: Global.user.email
+    })
+    window.location.href = 'meetings/' + meeting_id;
+  }
 
-  // Generate calendar days
-  const getDaysInMonth = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const days = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    return { days, firstDay };
-  };
+  const [loading, setLoading] = useState(true);
 
-  const { days, firstDay } = getDaysInMonth(currentMonth);
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  useEffect(() => {
+    const fetchAvailableDoctors = async () => {
+      setLoading(true);
+      try {
+        const response = await Global.httpGet('/appointment/getAvailableDoctors');
+        setAvailableDoctors(response.data.availableDoctors);
+        setNextAvailableTime(response.data.nextAvailableTime);
+        console.log("Response received:", response);
+      } catch (error) {
+        console.error('Error fetching available doctors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAvailableDoctors();
+  }, []);
 
-  const handleDateSelect = (day) => {
-    const selected = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    setSelectedDate(selected);
-    setAppointmentDetails(prev => ({
-      ...prev,
-      date: selected.toISOString().split('T')[0]
-    }));
-  };
-
-  const isDoctorAvailable = (day) => {
-    if (!appointmentDetails.doctor) return true;
-    const selectedDoctor = doctors.find(d => d.id === appointmentDetails.doctor);
-    const dayOfWeek = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day).getDay();
-    return selectedDoctor?.availableDays.includes(dayOfWeek);
-  };
-
-  const renderCalendarDays = () => {
-    const calendarDays = [];
-    for (let i = 0; i < firstDay; i++) {
-      calendarDays.push(<div key={`empty-${i}`} className="h-12"></div>);
-    }
-    
-    for (let day = 1; day <= days; day++) {
-      const isToday = day === new Date().getDate() && 
-                      currentMonth.getMonth() === new Date().getMonth() &&
-                      currentMonth.getFullYear() === new Date().getFullYear();
-      
-      const isSelected = selectedDate && 
-                        day === selectedDate.getDate() &&
-                        currentMonth.getMonth() === selectedDate.getMonth() &&
-                        currentMonth.getFullYear() === selectedDate.getFullYear();
-
-      const isAvailable = isDoctorAvailable(day);
-
-      calendarDays.push(
-        <div 
-          key={day}
-          className={`h-12 relative cursor-pointer border transition-all duration-200
-            ${isAvailable ? 'hover:border-teal-500' : 'opacity-50 cursor-not-allowed'}
-            ${isSelected ? 'bg-teal-500 text-white' : isToday ? 'bg-teal-50' : 'bg-white'}
-            ${isAvailable ? 'border-gray-100' : 'border-gray-200'}
-            rounded-lg`}
-          onClick={() => isAvailable && handleDateSelect(day)}
-        >
-          <span className={`absolute top-1 left-2 text-sm ${isSelected ? 'text-white' : ''}`}>
-            {day}
-          </span>
+  if (loading) {
+    return (
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <div className="w-[25vw] h-[25vh]">
+          <LottieAnimation animationData={healthLoader} loop={true} />
         </div>
-      );
-    }
-    return calendarDays;
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAppointmentDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Appointment Details:', appointmentDetails);
-    // Here you would typically send this data to your backend
-  };
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-6xl font-dm-sans mx-auto p-4">
@@ -115,173 +60,60 @@ const BookAppointment = () => {
       </div>
 
       {/* Main Content */}
-      <div className="bg-white rounded-b-2xl shadow-lg p-6">
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Calendar Section */}
-          <div className="lg:col-span-2 bg-gray-50 p-6 rounded-xl">
-            {/* Month Navigation */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">
-                {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
-              </h2>
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-2">
-              {weekDays.map(day => (
-                <div key={day} className="h-8 flex items-center justify-center text-sm font-medium text-gray-600">
-                  {day}
+      <div className='bg-white grid grid-cols-3 gap-3 mt-3 h-[400px]'>
+        {
+          availableDoctors && availableDoctors.map((doctor, index) => (
+            <Card className="max-w-md h-[300px] bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              <CardHeader className="pb-1 pt-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-lg font-bold">{doctor.firstName}</h2>
+                    <p className="text-teal-100 text-sm">{doctor.specialization}</p>
+                  </div>
+                  <Badge className="bg-teal-200 text-teal-900 hover:bg-teal-300 text-xs">
+                    ⭐ {doctor.rating}
+                  </Badge>
                 </div>
-              ))}
-              {renderCalendarDays()}
-            </div>
+              </CardHeader>
 
-            {/* Time Slots */}
-            {selectedDate && (
-              <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
-                <h3 className="text-lg font-medium mb-4">Available Time Slots</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {Object.entries(timeSlots).map(([period, slots]) => (
-                    <div key={period} className="space-y-2">
-                      <h4 className="text-sm font-medium capitalize text-gray-600">{period}</h4>
-                      {slots.map(time => (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setAppointmentDetails(prev => ({ ...prev, time }))}
-                          className={`w-full py-2 px-4 rounded-lg text-sm transition-colors
-                            ${appointmentDetails.time === time 
-                              ? 'bg-teal-500 text-white' 
-                              : 'bg-gray-50 text-gray-700 hover:bg-teal-50'}`}
-                        >
-                          {time}
-                        </button>
-                      ))}
+              <CardContent className="space-y-2">
+                {/* Experience and Next Available Time */}
+                <div className="flex justify-between items-center bg-white/10 rounded-lg p-2">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-teal-200" />
+                    <div>
+                      <p className="text-xs text-teal-100">Next Available</p>
+                      <p className="text-sm font-semibold">{nextAvailableTime}</p>
                     </div>
-                  ))}
+                  </div>
+                  <div className="border-l border-white/20 pl-2">
+                    <p className="text-xs text-teal-100">Experience</p>
+                    <p className="text-sm font-semibold">{doctor.experience}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
 
-          {/* Appointment Details */}
-          <div className="bg-gray-50 p-6 rounded-xl">
-            <h3 className="text-lg font-semibold mb-6">Appointment Details</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Select Doctor</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <select
-                    name="doctor"
-                    value={appointmentDetails.doctor}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    required
-                  >
-                    <option value="">Choose a doctor</option>
-                    {doctors.map(doctor => (
-                      <option key={doctor.id} value={doctor.id}>
-                        {doctor.name} - {doctor.speciality}
-                      </option>
-                    ))}
-                  </select>
+                <div className="flex items-center space-x-2 bg-white/5 p-2 rounded-lg">
+                  <Mail className="w-4 h-4 text-teal-200" />
+                  <div>
+                    <p className="text-xs text-teal-100">Email</p>
+                    <p className="text-sm font-semibold truncate">{doctor.email}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Selected Date</label>
-                <div className="relative">
-                  <CalendarDays className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <input
-                    type="date"
-                    name="date"
-                    value={appointmentDetails.date}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    required
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Selected Time</label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    name="time"
-                    value={appointmentDetails.time}
-                    readOnly
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg bg-gray-50"
-                    placeholder="Select a time slot"
-                    required
-                  />
-                </div>
-              </div>
+                {/* Book Appointment Button */}
+                <Button
+                  className="w-full bg-white text-teal-700 hover:bg-teal-50 font-semibold py-2 flex items-center justify-center gap-2"
+                  onClick={() => bookAppointment(doctor.email)}
+                >
+                  Book Appointment
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          ))
+        }
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Consultation Type</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <select
-                    name="type"
-                    value={appointmentDetails.type}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    required
-                  >
-                    <option value="">Select type</option>
-                    <option value="virtual">Virtual Consultation</option>
-                    <option value="inPerson">In-Person Visit</option>
-                    <option value="followUp">Follow-up</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <textarea 
-                    name="notes"
-                    value={appointmentDetails.notes}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    rows="3"
-                    placeholder="Any additional information..."
-                  ></textarea>
-                </div>
-              </div>
-
-              <Button 
-                type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white hover:from-teal-600 hover:to-teal-800"
-              >
-                Confirm Booking
-              </Button>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   );

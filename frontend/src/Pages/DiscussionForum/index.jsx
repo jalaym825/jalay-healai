@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
-import { MessageCircle, Heart, Share2, BookmarkPlus, ArrowUpCircle, Hash } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardFooter } from '../../UIs/shadcn-ui/card';
+import React, { useEffect, useState } from 'react';
+import { MessageCircle, Share2, ArrowUpCircle, Hash } from 'lucide-react';
+import { Card, CardHeader, CardFooter } from '../../UIs/shadcn-ui/card';
 import { Button } from '../../UIs/shadcn-ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '../../UIs/shadcn-ui/avatar';
+import { Avatar, AvatarFallback } from '../../UIs/shadcn-ui/avatar';
 import { Input } from '../../UIs/shadcn-ui/input';
-import { Badge } from '../../UIs/shadcn-ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '../../UIs/shadcn-ui/dialog';
 import { Textarea } from '../../UIs/shadcn-ui/textarea';
 import { Label } from '../../UIs/shadcn-ui/label';
 import Global from '@/Utils/Global';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
+import healthLoader from '../../assets/healthLoader.json';
+
 
 const DiscussionForum = () => {
     const [forumContent, setForumContent] = React.useState({
@@ -17,8 +20,31 @@ const DiscussionForum = () => {
     });
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-    const [forumId, setForumId] = React.useState(null);
-    const [forumData, setForumData] = React.useState({});
+    const [forumData, setForumData] = React.useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchForumData = async () => {
+            try {
+                setLoading(true);
+                const response = await Global.httpGet(`/forums`);
+                setForumData(response['forums']);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchForumData();
+    }, []);
+
+    if (loading) {
+        return <div className="flex h-[80vh] w-full justify-center items-center">
+            <div className="w-[35vw] h-[35vh]">
+                <LottieAnimation animationData={healthLoader} loop={true} />
+            </div>
+        </div>
+    }
 
 
     const resetForm = () => {
@@ -38,7 +64,6 @@ const DiscussionForum = () => {
                 message: forumContent.content
             });
             console.log(response.id);
-            setForumId(response.id);
             toast.success('Discussion posted successfully');
             setIsDialogOpen(false);
             resetForm();
@@ -49,32 +74,8 @@ const DiscussionForum = () => {
             setIsSubmitting(false);
         }
     };
-    
-   
 
 
-    const posts = [
-        {
-            id: 1,
-            title: "What's your favorite programming language and why?",
-            author: "Sarah Chen",
-            content: "I've been coding for a few years now and I'm curious to hear everyone's preferences. Personally, I love Python for its simplicity and vast ecosystem.",
-            tags: ["Programming", "Discussion"],
-            likes: 42,
-            replies: 28,
-            timeAgo: "2h ago"
-        },
-        {
-            id: 2,
-            title: "Tips for Remote Work Productivity",
-            author: "Alex Kumar",
-            content: "After working remotely for 2 years, I've gathered some effective strategies for staying productive. Here are my top recommendations...",
-            tags: ["Remote Work", "Productivity"],
-            likes: 89,
-            replies: 56,
-            timeAgo: "5h ago"
-        }
-    ];
 
 
 
@@ -153,53 +154,52 @@ const DiscussionForum = () => {
                     </Button>
                 </div>
 
-                {/* Posts */}
-                {posts.map(post => (
-                    <Card key={post.id} className="bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-4">
-                                    <Avatar>
-                                        <AvatarFallback>{post.author[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <h3 className="font-semibold text-lg">{post.title}</h3>
-                                        <div className="flex items-center text-sm text-gray-500">
-                                            <span>{post.author}</span>
-                                            <span className="mx-2">•</span>
-                                            <span>{post.timeAgo}</span>
+                {
+                    forumData.length > 0 ? (
+                        forumData.map((post) => (
+                            <Link to={`/forum/${post.id}`}>
+                                <Card key={post.id} className="bg-white/95 mt-4 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                    <CardHeader>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-4">
+                                                <Avatar>
+                                                    <AvatarFallback>{post.original_message.user_id[0]}</AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <h3 className="font-semibold text-lg">{post.original_message.message}</h3>
+                                                    <div className="flex items-center text-sm text-gray-500">
+                                                        <span>{post.original_message.user_id}</span>
+                                                        <span className="mx-2">•</span>
+                                                        <span>10</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600">{post.content}</p>
-                            <div className="flex gap-2 mt-4">
-                                {post.tags.map(tag => (
-                                    <Badge key={tag} variant="secondary" className="bg-teal-100 text-teal-700 hover:bg-teal-200">
-                                        {tag}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </CardContent>
-                        <CardFooter className="border-t pt-4">
-                            <div className="flex items-center space-x-4 text-gray-500">
-                                <Button variant="ghost" size="sm" className="flex items-center">
-                                    <ArrowUpCircle className="h-4 w-4 mr-1" />
-                                    {post.likes}
-                                </Button>
-                                <Button variant="ghost" size="sm" className="flex items-center">
-                                    <MessageCircle className="h-4 w-4 mr-1" />
-                                    {post.replies}
-                                </Button>
-                                <Button variant="ghost" size="sm">
-                                    <Share2 className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </CardFooter>
-                    </Card>
-                ))}
+                                    </CardHeader>
+
+                                    <CardFooter className="border-t pt-4">
+                                        <div className="flex items-center space-x-4 text-gray-500">
+                                            <Button variant="ghost" size="sm" className="flex items-center">
+                                                <ArrowUpCircle className="h-4 w-4 mr-1" />
+                                                10
+                                            </Button>
+                                            <Button variant="ghost" size="sm" className="flex items-center">
+                                                <MessageCircle className="h-4 w-4 mr-1" />
+                                                20
+                                            </Button>
+                                            <Button variant="ghost" size="sm">
+                                                <Share2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            </Link>
+                        ))
+                    ) : (
+                        <p>No forums available.</p>
+                    )
+                }
+
             </div>
         </div>
     );

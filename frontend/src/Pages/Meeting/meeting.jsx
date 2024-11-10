@@ -14,6 +14,8 @@ import '@stream-io/video-react-sdk/dist/css/styles.css';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './meeting.css';
+import healthLoader from './assets/healthLoader.json';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
 
 const apiKey = 'db7pgv2zjwk4';
 const userId = 'Asajj_Ventress';
@@ -57,7 +59,11 @@ export const MyUILayout = () => {
     const callingState = useCallCallingState();
 
     if (callingState !== CallingState.JOINED) {
-        return <div>Loading...</div>;
+        return <div className="flex h-[80vh] w-full justify-center items-center">
+            <div className="w-[35vw] h-[35vh]">
+                <LottieAnimation animationData={healthLoader} loop={true} />
+            </div>
+        </div>
     }
 
     return (
