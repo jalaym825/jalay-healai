@@ -122,6 +122,8 @@ model Prescription {
   Prescription_Medicine Prescription_Medicine[] @relation("prescription")
   appointment_id        String
   appoinntment          Appointment             @relation("appointment_prescription", fields: [appointment_id], references: [id])
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
 }
 
 model Prescription_Medicine {
@@ -133,6 +135,8 @@ model Prescription_Medicine {
   time            MEDICINE_EAT_TIME
   quantity        Int
   eat_time        MEDICINE_TIME
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 model Forum {
