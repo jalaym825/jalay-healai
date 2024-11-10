@@ -9,14 +9,14 @@ import UserLayout from './Components/UserLayout/UserLayout';
 import BookAppointment from './Pages/BookAppointment';
 import DiscussionForm from './Pages/DiscussionForum';
 import ForumComment from './Pages/DiscussionForum/Forum';
+import DoctorPrescription from './Pages/DoctorPrescription';
 import Home from './Pages/Home';
 import { Login } from './Pages/Login';
 import Meeting from "./Pages/Meeting/index";
 import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
 import Global from './Utils/Global';
-import Dashboard from "./Pages/Dashboard";
-import Doctordashboard from './Pages/DoctorDashboard'
+
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -49,8 +49,10 @@ function App() {
             <Route path='bookappointment' element={<BookAppointment />} />
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
-            <Route path="meeting/:meetingId" element={<Meeting />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="forum/:id" element={<ForumComment />} />
+            <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
+            <Route path="meetings/:meetingId" element={<Meeting />} />
+
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />
