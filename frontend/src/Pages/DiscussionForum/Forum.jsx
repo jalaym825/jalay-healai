@@ -3,13 +3,16 @@ import { Card, CardContent } from "../../UIs/shadcn-ui/card";
 import { Button } from "../../UIs/shadcn-ui/button";
 import { Textarea } from "../../UIs/shadcn-ui/textarea";
 import { Heart, MessageCircle } from 'lucide-react';
+import healthLoader from '../../assets/healthLoader.json';
 import { useParams } from 'react-router-dom';
 import Global from '@/Utils/Global';
 import { toast } from 'sonner';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
 
 const ForumMessage = () => {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [forumLoading, setForumLoading] = useState(false);
     const [forumData, setForumData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
     const [username, setUsername] = useState("");
@@ -21,11 +24,9 @@ const ForumMessage = () => {
                 try {
                     setLoading(true);
                     const response = await Global.httpGet(`/forums/${id}`);
-                    console.log("Response received:", response);
                     setForumData(response.forum_messages);
                     setOriginalData(response.original_message);
                     setUsername(response.original_message.user.firstName);
-                    console.log(response.original_message.user)
                 } catch (error) {
                     console.error(error);
                 } finally {
@@ -36,12 +37,18 @@ const ForumMessage = () => {
         }
     }, [id]);
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex h-[80vh] w-full justify-center items-center">
+            <div className="w-[35vw] h-[35vh]">
+                <LottieAnimation animationData={healthLoader} loop={true} />
+            </div>
+        </div>
     }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!id) return;
+        setForumLoading(true);
         try {
             const response = await Global.httpPost('/forums/postMessage', {
                 message: addComment,
@@ -51,9 +58,12 @@ const ForumMessage = () => {
             setForumData([...forumData, response]);
             setAddComment(false);
             setAddComment('');
+            toast.success('Comment added successfully');
         } catch (error) {
             console.error(error);
             toast.error(error.message);
+        } finally {
+            setForumLoading(false);
         }
     };
 
@@ -117,9 +127,37 @@ const ForumMessage = () => {
                             <div className="flex justify-end">
                                 <Button
                                     type="submit"
-                                    className="bg-gradient-to-r from-teal-500 to-teal-700 text-white hover:from-teal-600 hover:to-teal-800 rounded-xl px-6 py-2 transform transition-transform hover:scale-105"
+                                    className={`bg-gradient-to-r from-teal-500 to-teal-700 text-white hover:from-teal-600 hover:to-teal-800 rounded-xl px-6 py-2 transform transition-transform hover:scale-105 ${forumLoading ? 'cursor-not-allowed opacity-50' : ''
+                                        }`}
+                                    disabled={forumLoading} 
                                 >
-                                    Add Comment ✨
+                                    {forumLoading ? (
+                                        <div className="flex items-center">
+                                            <svg
+                                                className="animate-spin h-5 w-5 mr-2 text-white"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z"
+                                                ></path>
+                                            </svg>
+                                            Adding...
+                                        </div>
+                                    ) : (
+                                        'Add Comment ✨'
+                                    )}
                                 </Button>
                             </div>
                         </form>

@@ -18,7 +18,6 @@ import { Signup } from './Pages/SignUp';
 import Dashboard from "./Pages/Dashboard";
 import Global from './Utils/Global';
 
-
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const loginRequiredRoutes = ["/profile", "/dashboard"];
@@ -54,6 +53,7 @@ function App() {
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
             <Route path="forum/:id" element={<ForumComment />} />
+            <Route path='dashboard' element={<Dashboard />} />
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
             <Route path="dashboard" element={<Dashboard />} />
@@ -65,7 +65,7 @@ function App() {
         </Routes>
       ) : (
         <div className="flex h-[80vh] w-full justify-center items-center">
-          <div className="w-[35vw] h-[35vh]">
+          <div className="w-[25vw] h-[25vh]">
             <LottieAnimation animationData={healthLoader} loop={true} />
           </div>
         </div>

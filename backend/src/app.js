@@ -10,6 +10,7 @@ const forumRouter = require('./api/forum/router.js');
 const { errorMiddleware } = require('./middlewares/index');
 const { Prisma } = require('./utils/index');
 const logger = require('./utils/logger.js');
+const prescriptionRouter = require('./api/prescription/router.js');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,7 +18,7 @@ const server = http.createServer(app);
 app.use(morgan("[:date[clf]] :method :url :status :res[content-length] - :response-time ms"));
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://37.27.81.8:3030'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
@@ -35,6 +36,7 @@ server.listen(port, () => {
     app.use('/auth', authRouter);
     app.use('/appointment', appointmentRouter);
     app.use('/forums', forumRouter);
+    app.use('/prescription', prescriptionRouter);
     app.use(errorMiddleware);
   })
 });

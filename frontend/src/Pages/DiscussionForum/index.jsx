@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { MessageCircle, Heart, Share2, BookmarkPlus, ArrowUpCircle, Hash } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardFooter } from '../../UIs/shadcn-ui/card';
+import { MessageCircle, Share2, ArrowUpCircle, Hash } from 'lucide-react';
+import { Card, CardHeader, CardFooter } from '../../UIs/shadcn-ui/card';
 import { Button } from '../../UIs/shadcn-ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '../../UIs/shadcn-ui/avatar';
+import { Avatar, AvatarFallback } from '../../UIs/shadcn-ui/avatar';
 import { Input } from '../../UIs/shadcn-ui/input';
-import { Badge } from '../../UIs/shadcn-ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '../../UIs/shadcn-ui/dialog';
 import { Textarea } from '../../UIs/shadcn-ui/textarea';
 import { Label } from '../../UIs/shadcn-ui/label';
 import Global from '@/Utils/Global';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
+import healthLoader from '../../assets/healthLoader.json';
+
 
 const DiscussionForum = () => {
     const [forumContent, setForumContent] = React.useState({
@@ -19,7 +21,7 @@ const DiscussionForum = () => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [forumData, setForumData] = React.useState([]);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchForumData = async () => {
@@ -37,7 +39,11 @@ const DiscussionForum = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex h-[80vh] w-full justify-center items-center">
+            <div className="w-[35vw] h-[35vh]">
+                <LottieAnimation animationData={healthLoader} loop={true} />
+            </div>
+        </div>
     }
 
 

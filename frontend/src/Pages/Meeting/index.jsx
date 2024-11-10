@@ -14,6 +14,8 @@ import './meeting.css';
 import { useEffect, useState } from 'react';
 import Global from '@/Utils/Global';
 import { useParams } from 'react-router-dom';
+import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
+import healthLoader from '../../assets/healthLoader.json';
 
 const apiKey = 'db7pgv2zjwk4';
 
@@ -23,20 +25,20 @@ export default function App() {
     const [appointmentId, setAppointmentId] = useState(null); // Store appointment ID
     const { meetingId } = useParams();
     const navigate = useNavigate();
-    
+
     const sanitizeUserId = (email) => {
         const rawId = email.split('@')[0];
         const sanitized = rawId
-          .toLowerCase()
-          .replace(/[^a-z0-9@_-]/g, '')
-          .replace(/[@_-]+/g, '_');
-        
+            .toLowerCase()
+            .replace(/[^a-z0-9@_-]/g, '')
+            .replace(/[@_-]+/g, '_');
+
         return sanitized
-          .replace(/^[@_-]+/, '')
-          .replace(/[@_-]+$/, '')
-          || 'user';
+            .replace(/^[@_-]+/, '')
+            .replace(/[@_-]+$/, '')
+            || 'user';
     };
-      
+
     useEffect(() => {
         let currentCall = null;
 
@@ -87,7 +89,7 @@ export default function App() {
                 // Remove event listeners first
                 currentCall.off('call.ended');
                 currentCall.off('call.disconnected');
-                
+
                 // Only try to leave if the call is active
                 if (currentCall.state.callingState === CallingState.JOINED) {
                     currentCall.leave().catch(console.error);
@@ -127,7 +129,7 @@ export const MyUILayout = ({ call, appointmentId }) => {
             if (call && call.state.callingState === CallingState.JOINED) {
                 await call.leave();
             }
-            if (appointmentId) {
+            if (appointmentId && Global.user.role === 'DOCTOR') {
                 navigate(`/appointments/${appointmentId}/prescription`); // Redirect to prescription page after leaving
             } else {
                 navigate('/'); // Fallback if no appointmentId
@@ -139,7 +141,11 @@ export const MyUILayout = ({ call, appointmentId }) => {
     };
 
     if (callingState !== CallingState.JOINED) {
-        return <div>Loading...</div>;
+        return <div className="flex h-[80vh] w-full justify-center items-center">
+            <div className="w-[35vw] h-[35vh]">
+                <LottieAnimation animationData={healthLoader} loop={true} />
+            </div>
+        </div>
     }
 
     return (
