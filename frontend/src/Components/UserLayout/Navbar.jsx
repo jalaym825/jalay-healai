@@ -46,6 +46,9 @@ export default function NavBar() {
                                     <Link to='/dashboard' className="font-medium p-2.5 flex items-center text-md transition-colors ">
                                         Dashboard
                                     </Link>
+                                    <Link to='/subscription' className="font-medium p-2.5 flex items-center text-md transition-colors ">
+                                        Subscription
+                                    </Link>
                                 </div>
                             </nav>
 

@@ -62,7 +62,7 @@ const Subscription = () => {
         }
 
         // creating a new order
-        const result = await axios.post("http://localhost:3001/razorpay/payment", body);
+        const result = await Global.httpPost("/razorpay/payment", body);
         console.log(result)
 
         if (!result) {
@@ -70,7 +70,7 @@ const Subscription = () => {
             return;
         }
 
-        const { amount, order_id } = result.data.order;
+        const { amount, id: order_id } = result.order;
 
         const options = {
             key: "rzp_test_kGF26SIu82U87v",
