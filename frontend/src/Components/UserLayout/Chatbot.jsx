@@ -99,7 +99,7 @@ const Chatbot = () => {
             setMessages(prev => [...prev, userMessage]);
             setUserInput('');
 
-            const response = await axios.post('http://localhost:5000/send_message', {
+            const response = await axios.post('http://37.27.81.8:9001/send_message', {
                 message: userMessage.content,
                 session_id: sessionId,
                 language: selectedLanguage
@@ -251,8 +251,8 @@ const Chatbot = () => {
                             <button
                                 onClick={toggleListening}
                                 className={`p-3 border rounded-lg transition ${isListening
-                                        ? 'border-red-500 text-red-500 animate-pulse'
-                                        : 'border-green-500 text-green-500 hover:bg-gray-100'
+                                    ? 'border-red-500 text-red-500 animate-pulse'
+                                    : 'border-green-500 text-green-500 hover:bg-gray-100'
                                     }`}
                                 aria-label="Voice Input"
                                 disabled={isLoading}
@@ -263,8 +263,8 @@ const Chatbot = () => {
                                 onClick={handleSendMessage}
                                 disabled={isLoading || !userInput.trim()}
                                 className={`p-3 rounded-lg transition ${isLoading || !userInput.trim()
-                                        ? 'bg-gray-300 cursor-not-allowed'
-                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
+                                    ? 'bg-gray-300 cursor-not-allowed'
+                                    : 'bg-teal-500 hover:bg-teal-600 text-white'
                                     }`}
                                 aria-label="Send Message"
                             >

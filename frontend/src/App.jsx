@@ -17,6 +17,7 @@ import { Profile } from './Pages/Profile';
 import { Signup } from './Pages/SignUp';
 import Dashboard from "./Pages/Dashboard";
 import Global from './Utils/Global';
+import Subscription from './Pages/BookAppointment/Subscription';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -44,11 +45,12 @@ function App() {
       {isLoaded ? (
         <Routes>
           <Route path="/" element={<UserLayout />}>
-            <Route path="" element={<Home />} />
+            <Route path="" element={<Chatbot />} />
+            <Route path="chatbot" element={<Chatbot />} />
             <Route path="discussion" element={<DiscussionForm />} />
             <Route path="services" element={<h1>Services</h1>} />
             <Route path="contact" element={<h1>Contact</h1>} />
-            <Route path='chatbot' element={<Chatbot />} />
+            <Route path='home' element={<Home />} />
             <Route path='bookappointment' element={<BookAppointment />} />
             <Route path='profile' element={<Profile />} />
             <Route path="forum" element={<ForumComment />} />
@@ -57,6 +59,7 @@ function App() {
             <Route path='appointments/:id/prescription' element={<DoctorPrescription />} />
             <Route path="meetings/:meetingId" element={<Meeting />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="subscription" element={<Subscription />} />
           </Route>
           <Route path="/" element={<LoginSignupLayout />}>
             <Route path="signup" element={<Signup />} />

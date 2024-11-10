@@ -12,6 +12,7 @@ const getToken = asyncHandler(async (req, res, next) => {
         },
     })
 
+
     if(!appointment){
         return next({
             path: '/appointment/getToken', statusCode: 404, message: "Appointment not found!"

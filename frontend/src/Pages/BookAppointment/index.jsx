@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../UIs/shadcn-ui/button'
 import { Card, CardContent, CardHeader } from '../../UIs/shadcn-ui/card';
 import { Mail, Phone, User, Calendar, Clock, ChevronRight } from 'lucide-react';
@@ -7,11 +7,13 @@ import Global from '@/Utils/Global';
 import healthLoader from '../../assets/healthLoader.json';
 import { LottieAnimation } from '@/Components/Lottie/LottieAnimation';
 
-
 const BookAppointment = () => {
 
   const [availableDoctors, setAvailableDoctors] = useState([]);
   const [nextAvailableTime, setNextAvailableTime] = useState('');
+  // const [amount, setAmount] = useState(0);
+
+
 
   const bookAppointment = async (id) => {
     const { meeting_id } = await Global.httpPost('/appointment/createAppointment', {
@@ -63,7 +65,7 @@ const BookAppointment = () => {
       <div className='bg-white grid grid-cols-3 gap-3 mt-3 h-[400px]'>
         {
           availableDoctors && availableDoctors.map((doctor, index) => (
-            <Card className="max-w-md h-[300px] bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <Card key={index} className="max-w-md h-[300px] bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <CardHeader className="pb-1 pt-3">
                 <div className="flex justify-between items-start">
                   <div>

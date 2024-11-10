@@ -37,6 +37,12 @@ enum MEDICINE_EAT_TIME {
   EVENING
 }
 
+enum SUBSCRIPTION_PLAN {
+  FREE
+  PREMIUM
+  PLATINUM
+}
+
 model Users {
   email         String  @id @unique
   firstName     String
@@ -51,9 +57,9 @@ model Users {
   height       Float?
   weight       Float?
   mobileNumber String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  subscription SUBSCRIPTION_PLAN @default(FREE)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   verification_tokens   VerificationTokens[]   @relation("verificationToken")
   password_reset_tokens PasswordResetTokens[]  @relation("resetPasswordToken")

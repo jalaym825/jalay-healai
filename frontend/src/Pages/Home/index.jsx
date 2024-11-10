@@ -20,6 +20,7 @@ import healthsvg from "../../assets/healthsvg.svg";
 import doctor from "../../assets/doctor.jpg";
 import doctor1 from "../../assets/doctor1.jpg";
 import doctor2 from "../../assets/doctor2.jpg";
+import FAQs from "@/Components/UserLayout/FAQs";
 
 const ServicesSection = () => {
   return (
@@ -150,13 +151,13 @@ const DoctorSection = () => {
                   className="w-full h-full   object-cover"
                 />
               </div>
-              <div className="bg-emerald-500 h-[40vh] rounded-3xl p-6 text-center">
+              <div className="bg-white border-[0.5px] border-gray-400 text-black h-[40vh] rounded-3xl p-6 text-center">
                 <div className="relative h-[80px]"></div>
-                <h3 className="text-white text-xl font-bold mb-2">
+                <h3 className=" text-xl font-bold mb-2">
                   {doctor.name}
                 </h3>
-                <p className="text-emerald-100 mb-4">{doctor.role}</p>
-                <div className="bg-emerald-700 rounded-full py-2 px-4 text-emerald-100 text-sm">
+                <p className=" mb-4">{doctor.role}</p>
+                <div className="bg-teal-400 rounded-full py-2 px-4 text-white text-sm">
                   {doctor.social}
                 </div>
               </div>
@@ -164,12 +165,7 @@ const DoctorSection = () => {
           ))}
         </div>
 
-        {/* Navigation Arrow */}
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          <button className="bg-emerald-500 p-4 rounded-full text-white hover:bg-emerald-600 transition-colors">
-            <ArrowRight size={24} />
-          </button>
-        </div>
+
       </div>
     </div>
   );
@@ -265,42 +261,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Rest of the components remain unchanged */}
-        {/* Features */}
-        <div className="max-w-6xl font-dm-sans mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature Cards */}
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Calendar className="h-6 w-6 text-teal-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Online Booking</h3>
-              <p className="text-gray-600">
-                Schedule appointments easily with our online booking system.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Activity className="h-6 w-6 text-teal-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">24/7 Emergency</h3>
-              <p className="text-gray-600">
-                Round-the-clock emergency care services available.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Stethoscope className="h-6 w-6 text-teal-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Expert Doctors</h3>
-              <p className="text-gray-600">
-                Access to highly qualified medical professionals.
-              </p>
-            </div>
-          </div>
-        </div>
+      
 
         {/* Services Section */}
         <ServicesSection />
@@ -316,6 +277,9 @@ const Home = () => {
           <div className="absolute inset-0 bg-white opacity-20 blur-sm rounded-full"></div>
         </div>
       </Link>
+      <section className="bg-white py-24 relative overflow-hidden">
+        <FAQs />
+      </section>
       <Footer className="mt-auto" />
     </div>
   );
