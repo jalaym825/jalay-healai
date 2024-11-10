@@ -37,7 +37,7 @@ const createPrescription = expressAsyncHandler(async (req, res, next) => {
         await Prisma.prescription_Medicine.create({
             data: {
                 prescription_id: prescriptionData.id,
-                medicine_id: medicine.medicine_id,
+                medicine_id: parseInt(medicine.medicine_id),
                 time: medicine.time,
                 quantity: parseInt(medicine.quantity),
                 eat_time: medicine.eat_time

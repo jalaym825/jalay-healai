@@ -21,6 +21,9 @@ const postForumMessage = expressAsyncHandler(async (req, res, next) => {
             message,
             user_id: req.user.email,
             forum_id
+        },
+        include: {
+            user: true
         }
     })
 
