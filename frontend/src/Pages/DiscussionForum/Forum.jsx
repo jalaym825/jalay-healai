@@ -43,12 +43,12 @@ const ForumMessage = () => {
         e.preventDefault();
         if (!id) return;
         try {
-            const response = await Global.httpPost('/forums/createForum', {
+            const response = await Global.httpPost('/forums/postMessage', {
                 message: addComment,
-                forum_id: id
+                forum_id: parseInt(id)
             });
             toast.success('Comment added successfully');
-            console.log(response);
+            setForumData([...forumData, response]);
             setAddComment(false);
             setAddComment('');
         } catch (error) {
@@ -95,7 +95,7 @@ const ForumMessage = () => {
                                             className="bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow"
                                         >
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="font-medium text-teal-700">✨ {comment['user'].firstname}</span>
+                                                <span className="font-medium text-teal-700">✨ {comment['user'].firstName}</span>
 
                                             </div>
                                             <p className="text-gray-700">{comment.message}</p>
