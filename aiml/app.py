@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all routes
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configure Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'
